@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: success
+  labels:
+    app: success
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: success
+  template:
+    metadata:
+      labels:
+        app: success
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.10
+        command: ["sleep", "7200"]

@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invalid-image
+  labels:
+    app: invalid-image
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: invalid-image
+  template:
+    metadata:
+      labels:
+        app: invalid-image
+    spec:
+      containers:
+      - name: main
+        image: bogus-image:does-not-exist

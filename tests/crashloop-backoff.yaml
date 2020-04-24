@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crashloop-backoff
+  labels:
+    app: crashloop-backoff
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: crashloop-backoff
+  template:
+    metadata:
+      labels:
+        app: crashloop-backoff
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.11
+        command: ["exit", "1"]

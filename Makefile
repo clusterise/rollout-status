@@ -3,5 +3,19 @@ TAG = 1.0
 
 all: build
 
-build: Dockerfile
+build: Dockerfile preflight
 	docker build -t $(REPO):$(TAG) .
+
+preflight:
+	go mod vendor
+	go fmt dite.pro/rollout-status/cmd
+
+.PHONY: test
+test: build
+	./test-e2e.sh $(REPO):$(TAG)
+
+.PHONY: cleanup
+cleanup:
+	rm -rf vendor
+	minikube stop
+	minikube delete

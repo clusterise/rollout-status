@@ -2,13 +2,11 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 	"os"
 	"path/filepath"
 
-	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
@@ -52,27 +50,27 @@ func main() {
 		// todo check what kind of error is this
 		// if deployment error, print different message
 		if err != nil {
-		    panic(err.Error())
+			panic(err.Error())
 		}
 	}
 }
 
 func getReplicaSetsByDeployment(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) (*appsv1.ReplicaSetList, error) {
-    selector, err := metav1.LabelSelectorAsSelector(deployment.Spec.Selector)
-    if err != nil {
-        return nil, err
-    }
-    options := metav1.ListOptions{LabelSelector: selector.String()}
-    return clientset.AppsV1().ReplicaSets(deployment.Namespace).List(options)
+	selector, err := metav1.LabelSelectorAsSelector(deployment.Spec.Selector)
+	if err != nil {
+		return nil, err
+	}
+	options := metav1.ListOptions{LabelSelector: selector.String()}
+	return clientset.AppsV1().ReplicaSets(deployment.Namespace).List(options)
 }
 
 func getPodsByReplicaSet(clientset *kubernetes.Clientset, replicasSet *appsv1.ReplicaSet) (*v1.PodList, error) {
-    selector, err := metav1.LabelSelectorAsSelector(replicasSet.Spec.Selector)
-    if err != nil {
-        return nil, err
-    }
-    options := metav1.ListOptions{LabelSelector: selector.String()}
-    return clientset.CoreV1().Pods(replicasSet.Namespace).List(options)
+	selector, err := metav1.LabelSelectorAsSelector(replicasSet.Spec.Selector)
+	if err != nil {
+		return nil, err
+	}
+	options := metav1.ListOptions{LabelSelector: selector.String()}
+	return clientset.CoreV1().Pods(replicasSet.Namespace).List(options)
 }
 
 func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) error {
@@ -82,10 +80,11 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 
 	replicasSetList, err := getReplicaSetsByDeployment(clientset, deployment)
 	if err != nil {
-	    return err
+		return err
 	}
 
 	for _, replicasSet := range replicasSetList.Items {
+		// tenhle case je asi k nicemu, je potreba to sledovat podle ***REVISION****
 		if replicasSet.Generation == deployment.Generation {
 			// RS that we want but is not live yet
 			podList, err := getPodsByReplicaSet(clientset, &replicasSet)
@@ -93,6 +92,7 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 				return err
 			}
 			for _, pod := range podList.Items {
+
 				// fail if the pod is containerruntimeerror (misconfigured env, missing image, etc)
 				// fail if the pod is in crashloop backoff
 				// fail if the pod is pending for X time
@@ -109,6 +109,7 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 			continue
 		}
 	}
+	return nil
 }
 
 func homeDir() string {

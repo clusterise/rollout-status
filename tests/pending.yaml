@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pending
+  labels:
+    app: pending
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pending
+  template:
+    metadata:
+      labels:
+        app: pending
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.11
+        command: ["sleep", "7200"]
+        resources:
+          requests:
+            memory: 1Ti # too much, scheduler will never assign node, pods will be pending
