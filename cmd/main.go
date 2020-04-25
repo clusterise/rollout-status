@@ -147,18 +147,6 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 func testPodStatus(pod *v1.Pod) error {
 	log.Printf("    checking status for pod %v", pod.Name)
 
-	if pod.Status.Phase == v1.PodPending {
-		for _, condition := range pod.Status.Conditions {
-			// fail if the pod is pending for X time
-			if condition.Type == v1.PodScheduled {
-				deadline := metav1.NewTime(time.Now().Add(time.Minute * -3)) // TODO configure
-				if condition.LastTransitionTime.Before(&deadline) {
-					return MakeRolloutErorr("failed to scheduled pod: %v", condition.Message)
-				}
-			}
-		}
-	}
-
 	for _, containerStatus := range pod.Status.ContainerStatuses {
 		// https://github.com/kubernetes/kubernetes/blob/4fda1207e347af92e649b59d60d48c7021ba0c54/pkg/kubelet/container/sync_result.go#L37
 		// fail if the pod is containerruntimeerror (misconfigured env, missing image, etc)
@@ -168,7 +156,19 @@ func testPodStatus(pod *v1.Pod) error {
 			case "CrashLoopBackOff":
 				fallthrough
 			case "ImagePullBackOff":
-				return MakeRolloutErorr("container %v is in %v", containerStatus.Name, containerStatus.State.Waiting.Reason)
+				return MakeRolloutErorr("container %v is in %v: %v", containerStatus.Name, containerStatus.State.Waiting.Reason, containerStatus.State.Waiting.Message)
+			}
+		}
+	}
+
+	if pod.Status.Phase == v1.PodPending {
+		for _, condition := range pod.Status.Conditions {
+			// fail if the pod is pending for X time
+			if condition.Type == v1.PodScheduled {
+				deadline := metav1.NewTime(time.Now().Add(time.Minute * -3)) // TODO configure
+				if condition.LastTransitionTime.Before(&deadline) {
+					return MakeRolloutErorr("failed to scheduled pod: %v", condition.Message)
+				}
 			}
 		}
 	}

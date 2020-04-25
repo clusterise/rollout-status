@@ -16,15 +16,16 @@ IMAGE="$1"
 function assert-selector-message() {
     SELECTOR="$1"
     MESSAGE="$2"
-    docker run --rm -it \
+    { docker run --rm -it \
         -v $HOME/.kube:/root/.kube:ro \
         -v /Users/mikulas/.minikube/profiles/minikube:/Users/mikulas/.minikube/profiles/minikube:ro \
         -v /Users/mikulas/.minikube/ca.crt:/Users/mikulas/.minikube/ca.crt:ro \
-        "$IMAGE" -namespace=default -selector="$SELECTOR" \
+        "$IMAGE" -namespace=default -selector="$SELECTOR" || true
+    } \
     | tee .output \
-    | grep --silent "$MESSAGE" \
+    | grep --silent --fixed-strings "$MESSAGE" \
     || {
-        echo "Failed to find following message ing $SELECTOR:"
+        echo "Failed to find following message in $SELECTOR:"
         echo "  $MESSAGE"
         echo "output:"
         cat .output
@@ -34,10 +35,10 @@ function assert-selector-message() {
     echo "$SELECTOR ok"
 }
 
-assert-selector-message "app=success" "Rollout successfully completed"
-assert-selector-message "app=invalid-image" "x"
-assert-selector-message "app=pending" "x"
-assert-selector-message "app=crashloop-backoff" "Rollout failed: container main is in CrashLoopBackOff"
+assert-selector-message "app=success" 'Rollout successfully completed'
+assert-selector-message "app=invalid-image" 'Rollout failed: container main is in ImagePullBackOff: Back-off pulling image "bogus-image:does-not-exist"'
+assert-selector-message "app=pending" 'Rollout failed: failed to scheduled pod: 0/1 nodes are available: 1 Insufficient memory.'
+assert-selector-message "app=crashloop-backoff" 'Rollout failed: container main is in CrashLoopBackOff'
 
 #for TEST in tests/*.yaml; do
 #    echo "$TEST"
