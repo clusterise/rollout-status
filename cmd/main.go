@@ -14,6 +14,9 @@ import (
 	"time"
 )
 
+// https://github.com/kubernetes/kubernetes/blob/dde6e8e7465468c32642659cb708a5cc922add64/staging/src/k8s.io/kubectl/pkg/util/deployment/deployment.go#L36
+const RevisionAnnotation = "deployment.kubernetes.io/revision"
+
 func main() {
 	namespace := flag.String("namespace", "", "Namespace to watch")
 	selector := flag.String("selector", "", "Label selector to watch, kubectl format such as release=foo,component=frontend")
@@ -85,37 +88,44 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 		return err
 	}
 
-	for _, replicasSet := range replicasSetList.Items {
-		log.Printf("checking status for replicaset %v", replicasSet.Name)
+	lastRevision, ok := deployment.Annotations[RevisionAnnotation]
+	if !ok {
+		return fmt.Errorf("missing annotation %v on deployment %v", RevisionAnnotation, deployment.Name)
+	}
+	log.Printf("  last revision is %v", lastRevision)
 
-		// tenhle case je asi k nicemu, je potreba to sledovat podle ***REVISION****
-		if replicasSet.Generation == deployment.Generation {
-			// RS that we want but is not live yet
-			podList, err := getPodsByReplicaSet(clientset, &replicasSet)
+	for _, replicasSet := range replicasSetList.Items {
+		rsRevision, ok := replicasSet.Annotations[RevisionAnnotation]
+		if !ok {
+			return fmt.Errorf("missing annotation %v on replicaset %v", RevisionAnnotation, replicasSet.Name)
+		}
+
+		if rsRevision != lastRevision {
+			// RS that is live and we no longer want
+			// TODO make sure there are no more pods running in this RS
+			// or older RS or RS that never became live and was overwritten
+			continue
+		}
+
+		log.Printf("  checking status for replicaset %v", replicasSet.Name)
+
+		podList, err := getPodsByReplicaSet(clientset, &replicasSet)
+		if err != nil {
+			return err
+		}
+		for _, pod := range podList.Items {
+			err = testPodStatus(&pod)
 			if err != nil {
 				return err
 			}
-			for _, pod := range podList.Items {
-				err = testPodStatus(&pod)
-				if err != nil {
-					return err
-				}
-			}
-
-		} else if replicasSet.Generation == deployment.Status.ObservedGeneration {
-			// RS that is live and we no longer want
-			// TODO make sure there are no more pods running in this RS
-			continue
-
-		} else {
-			// older RS or RS that never became live and was overwritten
-			continue
 		}
 	}
 	return nil
 }
 
 func testPodStatus(pod *v1.Pod) error {
+	log.Printf("    checking status for pod %v", pod.Name)
+
 	if pod.Status.Phase == v1.PodPending {
 		for _, condition := range pod.Status.Conditions {
 			// fail if the pod is pending for X time
