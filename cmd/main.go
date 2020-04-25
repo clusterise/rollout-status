@@ -2,14 +2,16 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
-	"os"
-	"path/filepath"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
+	"log"
+	"os"
+	"path/filepath"
+	"time"
 )
 
 func main() {
@@ -53,6 +55,8 @@ func main() {
 			panic(err.Error())
 		}
 	}
+
+	log.Println("completed")
 }
 
 func getReplicaSetsByDeployment(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) (*appsv1.ReplicaSetList, error) {
@@ -74,9 +78,7 @@ func getPodsByReplicaSet(clientset *kubernetes.Clientset, replicasSet *appsv1.Re
 }
 
 func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) error {
-	if deployment.Generation == deployment.Status.ObservedGeneration {
-		return nil
-	}
+	log.Printf("checking status for deployment %v", deployment.Name)
 
 	replicasSetList, err := getReplicaSetsByDeployment(clientset, deployment)
 	if err != nil {
@@ -84,6 +86,8 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 	}
 
 	for _, replicasSet := range replicasSetList.Items {
+		log.Printf("checking status for replicaset %v", replicasSet.Name)
+
 		// tenhle case je asi k nicemu, je potreba to sledovat podle ***REVISION****
 		if replicasSet.Generation == deployment.Generation {
 			// RS that we want but is not live yet
@@ -92,11 +96,10 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 				return err
 			}
 			for _, pod := range podList.Items {
-
-				// fail if the pod is containerruntimeerror (misconfigured env, missing image, etc)
-				// fail if the pod is in crashloop backoff
-				// fail if the pod is pending for X time
-				// fail if the pod is not running and state did not change for X time
+				err = testPodStatus(&pod)
+				if err != nil {
+					return err
+				}
 			}
 
 		} else if replicasSet.Generation == deployment.Status.ObservedGeneration {
@@ -109,6 +112,37 @@ func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 			continue
 		}
 	}
+	return nil
+}
+
+func testPodStatus(pod *v1.Pod) error {
+	if pod.Status.Phase == v1.PodPending {
+		for _, condition := range pod.Status.Conditions {
+			// fail if the pod is pending for X time
+			if condition.Type == v1.PodScheduled {
+				deadline := metav1.NewTime(time.Now().Add(time.Minute * -3)) // TODO configure
+				if condition.LastTransitionTime.Before(&deadline) {
+					return fmt.Errorf("failed to scheduled pod: %v", condition.Message)
+				}
+			}
+		}
+	}
+
+	for _, containerStatus := range pod.Status.ContainerStatuses {
+		// https://github.com/kubernetes/kubernetes/blob/4fda1207e347af92e649b59d60d48c7021ba0c54/pkg/kubelet/container/sync_result.go#L37
+		// fail if the pod is containerruntimeerror (misconfigured env, missing image, etc)
+		// fail if the pod is in crashloop backoff
+		if containerStatus.State.Waiting != nil {
+			switch containerStatus.State.Waiting.Reason {
+			case "CrashLoopBackOff":
+				fallthrough
+			case "ImagePullBackOff":
+				return fmt.Errorf("container %v is in %v", containerStatus.Name, containerStatus.State.Waiting.Reason)
+			}
+		}
+	}
+
+	// TODO fail if the pod is not running and state did not change for X time
 	return nil
 }
 

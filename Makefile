@@ -11,7 +11,7 @@ preflight:
 	go fmt dite.pro/rollout-status/cmd
 
 .PHONY: test
-test: build
+test:
 	./test-e2e.sh $(REPO):$(TAG)
 
 .PHONY: cleanup

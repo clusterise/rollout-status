@@ -13,7 +13,11 @@ IMAGE="$1"
 #    "$KUBECTL" apply -f "$TEST"
 #done
 
-docker run --rm -it "$IMAGE" -namespace=default -selector="app=crashloop-backoff"
+docker run --rm -it \
+    -v $HOME/.kube:/root/.kube:ro \
+    -v /Users/mikulas/.minikube/profiles/minikube:/Users/mikulas/.minikube/profiles/minikube:ro \
+    -v /Users/mikulas/.minikube/ca.crt:/Users/mikulas/.minikube/ca.crt:ro \
+    "$IMAGE" -namespace=default -selector="app=crashloop-backoff"
 
 #for TEST in tests/*.yaml; do
 #    echo "$TEST"
