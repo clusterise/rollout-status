@@ -17,6 +17,24 @@ import (
 // https://github.com/kubernetes/kubernetes/blob/dde6e8e7465468c32642659cb708a5cc922add64/staging/src/k8s.io/kubectl/pkg/util/deployment/deployment.go#L36
 const RevisionAnnotation = "deployment.kubernetes.io/revision"
 
+type RolloutError struct {
+	message string
+	nested  *error
+}
+
+func (re RolloutError) Error() string {
+	if re.nested != nil {
+		return fmt.Sprintf("%v: %v", re.message, re.nested)
+	}
+	return re.message
+}
+
+func MakeRolloutErorr(format string, args ...interface{}) RolloutError {
+	return RolloutError{
+		message: fmt.Sprintf(format, args...),
+	}
+}
+
 func main() {
 	namespace := flag.String("namespace", "", "Namespace to watch")
 	selector := flag.String("selector", "", "Label selector to watch, kubectl format such as release=foo,component=frontend")
@@ -55,11 +73,14 @@ func main() {
 		// todo check what kind of error is this
 		// if deployment error, print different message
 		if err != nil {
+			if re, ok := err.(RolloutError); ok {
+				log.Fatal("Rollout failed: ", re.Error())
+			}
 			panic(err.Error())
 		}
 	}
 
-	log.Println("completed")
+	log.Println("Rollout successfully completed")
 }
 
 func getReplicaSetsByDeployment(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) (*appsv1.ReplicaSetList, error) {
@@ -132,7 +153,7 @@ func testPodStatus(pod *v1.Pod) error {
 			if condition.Type == v1.PodScheduled {
 				deadline := metav1.NewTime(time.Now().Add(time.Minute * -3)) // TODO configure
 				if condition.LastTransitionTime.Before(&deadline) {
-					return fmt.Errorf("failed to scheduled pod: %v", condition.Message)
+					return MakeRolloutErorr("failed to scheduled pod: %v", condition.Message)
 				}
 			}
 		}
@@ -147,7 +168,7 @@ func testPodStatus(pod *v1.Pod) error {
 			case "CrashLoopBackOff":
 				fallthrough
 			case "ImagePullBackOff":
-				return fmt.Errorf("container %v is in %v", containerStatus.Name, containerStatus.State.Waiting.Reason)
+				return MakeRolloutErorr("container %v is in %v", containerStatus.Name, containerStatus.State.Waiting.Reason)
 			}
 		}
 	}
