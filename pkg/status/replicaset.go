@@ -4,12 +4,9 @@ import (
 	"dite.pro/rollout-status/pkg/client"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
-	"log"
 )
 
 func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSet) RolloutStatus {
-	log.Printf("  checking status for replicaset %q", replicaSet.Name)
-
 	for _, rsCondition := range replicaSet.Status.Conditions {
 		if rsCondition.Type == appsv1.ReplicaSetReplicaFailure && rsCondition.Status == v1.ConditionTrue {
 			err := MakeRolloutErorr("replicaset %q failed to create pods: %v", replicaSet.Name, rsCondition.Message)

@@ -3,13 +3,10 @@ package status
 import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"log"
 	"time"
 )
 
 func TestPodStatus(pod *v1.Pod) RolloutStatus {
-	log.Printf("    checking status for pod %q", pod.Name)
-
 	for _, initStatus := range pod.Status.InitContainerStatuses {
 		if initStatus.State.Waiting!= nil {
 			reason := initStatus.State.Waiting.Reason

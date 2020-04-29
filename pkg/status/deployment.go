@@ -5,15 +5,12 @@ import (
 	"fmt"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
-	"log"
 )
 
 // https://github.com/kubernetes/kubernetes/blob/dde6e8e7465468c32642659cb708a5cc922add64/staging/src/k8s.io/kubectl/pkg/util/deployment/deployment.go#L36
 const RevisionAnnotation = "deployment.kubernetes.io/revision"
 
 func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) RolloutStatus {
-	log.Printf("checking status for deployment %v", deployment.Name)
-
 	for _, condition := range deployment.Status.Conditions {
 		if condition.Type == appsv1.DeploymentProgressing && condition.Status == v1.ConditionFalse {
 			err := MakeRolloutErorr("deployment %q is not progressing: %v", deployment.Name, condition.Message)
@@ -30,7 +27,6 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 	if !ok {
 		return RolloutFatal(fmt.Errorf("missing annotation %q on deployment %q", RevisionAnnotation, deployment.Name))
 	}
-	log.Printf("  last revision is %v", lastRevision)
 
 	aggregatedStatus := RolloutStatus{
 		Continue: true,
