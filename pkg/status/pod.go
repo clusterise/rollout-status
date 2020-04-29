@@ -8,22 +8,22 @@ import (
 
 func TestPodStatus(pod *v1.Pod) RolloutStatus {
 	for _, initStatus := range pod.Status.InitContainerStatuses {
-		if initStatus.State.Waiting!= nil {
+		if initStatus.State.Waiting != nil {
 			reason := initStatus.State.Waiting.Reason
 			switch reason {
-				case "CrashLoopBackOff":
-					// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-					err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
-					return RolloutFatal(err)
+			case "CrashLoopBackOff":
+				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
+				err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
+				return RolloutFatal(err)
 			}
 		}
 		if initStatus.State.Terminated != nil {
 			reason := initStatus.State.Terminated.Reason
 			switch reason {
-				case "Error":
-					// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-					err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
-					return RolloutFatal(err)
+			case "Error":
+				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
+				err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
+				return RolloutFatal(err)
 			}
 		}
 	}

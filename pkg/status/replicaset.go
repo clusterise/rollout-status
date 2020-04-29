@@ -21,7 +21,7 @@ func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSe
 
 	aggregatedStatus := RolloutStatus{
 		Continue: true,
-		Error: nil,
+		Error:    nil,
 	}
 	for _, pod := range podList.Items {
 		status := TestPodStatus(&pod)

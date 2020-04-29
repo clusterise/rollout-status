@@ -15,8 +15,8 @@ var (
 )
 
 func init() {
-	_, b, _, _  := runtime.Caller(0)
-    projectPath = filepath.Dir(filepath.Dir(b))
+	_, b, _, _ := runtime.Caller(0)
+	projectPath = filepath.Dir(filepath.Dir(b))
 }
 
 func mockWrapperFromAssets(name string) client.Kubernetes {
@@ -36,18 +36,18 @@ func mockWrapperFromAssets(name string) client.Kubernetes {
 	return StaticClient{
 		DeploymentList: &deploymentList,
 		ReplicaSetList: &replicaSetList,
-		PodList: &podList,
+		PodList:        &podList,
 	}
 }
 
 func unmarshallAsset(path string, o interface{}) {
 	content, err := ioutil.ReadFile(path)
 	if err != nil {
-	    panic(err.Error())
+		panic(err.Error())
 	}
 	err = yaml.Unmarshal(content, o)
 	if err != nil {
-	    panic(err.Error())
+		panic(err.Error())
 	}
 }
 
@@ -55,7 +55,7 @@ func mockWrapper(deployments []appsv1.Deployment, replicaSets []appsv1.ReplicaSe
 	return StaticClient{
 		DeploymentList: &appsv1.DeploymentList{Items: deployments},
 		ReplicaSetList: &appsv1.ReplicaSetList{Items: replicaSets},
-		PodList: &v1.PodList{Items: pods},
+		PodList:        &v1.PodList{Items: pods},
 	}
 }
 

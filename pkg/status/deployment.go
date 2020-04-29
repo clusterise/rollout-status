@@ -30,7 +30,7 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 
 	aggregatedStatus := RolloutStatus{
 		Continue: true,
-		Error: nil,
+		Error:    nil,
 	}
 	for _, replicaSet := range replicasSetList.Items {
 		rsRevision, ok := replicaSet.Annotations[RevisionAnnotation]

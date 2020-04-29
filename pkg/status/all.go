@@ -17,7 +17,7 @@ func TestRollout(wrapper client.Kubernetes, namespace, selector string) RolloutS
 
 	aggregatedStatus := RolloutStatus{
 		Continue: true,
-		Error: nil,
+		Error:    nil,
 	}
 
 	//https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/kubectl/pkg/cmd/rollout/rollout_status.go
