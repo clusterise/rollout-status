@@ -34,10 +34,11 @@ func (o Output) errorOutputFrom(err error) errorOutput {
 		}
 
 		if errOut.Code == status.FailureProcessCrashing {
-			errOut.Log, err = trailContainerLogs(re.Pod, re.Container)
+			logBytes, err := o.wrapper.TrailContainerLogs(re.Namespace, re.Pod, re.Container)
 			if err != nil {
 			    return o.errorOutputFrom(err)
 			}
+			errOut.Log = string(logBytes)
 		}
 
 		return errOut

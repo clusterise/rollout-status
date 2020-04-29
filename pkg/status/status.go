@@ -52,8 +52,9 @@ type RolloutError struct {
 	Failure Failure
 	Message string
 
-	Container     string
-	Pod           string
+	Namespace string
+	Pod       string
+	Container string
 }
 
 func (re RolloutError) Error() string {

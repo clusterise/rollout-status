@@ -76,3 +76,7 @@ func (client StaticClient) ListAppsV1ReplicaSets(deployment *appsv1.Deployment) 
 func (client StaticClient) ListV1Pods(replicasSet *appsv1.ReplicaSet) (*v1.PodList, error) {
 	return client.PodList, nil
 }
+
+func (client StaticClient) TrailContainerLogs(namespace, pod, container string) ([]byte, error) {
+	panic("not implemented")
+}

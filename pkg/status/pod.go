@@ -16,8 +16,9 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 		if status.Error != nil {
 			if !status.Continue {
 				if re, ok := status.Error.(RolloutError); ok {
-					re.Container = initStatus.Name
+					re.Namespace = pod.Namespace
 					re.Pod = pod.Name
+					re.Container = initStatus.Name
 					status.Error = re
 				}
 				return status
@@ -31,8 +32,9 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 		if status.Error != nil {
 			if !status.Continue {
 				if re, ok := status.Error.(RolloutError); ok {
-					re.Container = containerStatus.Name
+					re.Namespace = pod.Namespace
 					re.Pod = pod.Name
+					re.Container = containerStatus.Name
 					status.Error = re
 				}
 				return status
