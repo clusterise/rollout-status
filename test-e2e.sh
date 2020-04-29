@@ -54,6 +54,8 @@ assert-selector-message "app=pending" \
     'Rollout failed: failed to scheduled pod: 0/1 nodes are available: 1 Insufficient memory.'
 assert-selector-message "app=crashloop-backoff" \
     'Rollout failed: container main is in CrashLoopBackOff'
+assert-selector-message "app=readiness" \
+    'Rollout failed: deployment limit-range is not progressing: ReplicaSet "limit-range-7dfcd777fd" has timed out progressing.'
 
 #for TEST in tests/*.yaml; do
 #    echo "$TEST"

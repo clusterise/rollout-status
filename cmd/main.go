@@ -109,6 +109,12 @@ func getPodsByReplicaSet(clientset *kubernetes.Clientset, replicasSet *appsv1.Re
 func deploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) error {
 	log.Printf("checking status for deployment %v", deployment.Name)
 
+	for _, condition := range deployment.Status.Conditions {
+		if condition.Type == appsv1.DeploymentProgressing && condition.Status == v1.ConditionFalse {
+			return MakeRolloutErorr("deployment %v is not progressing: %v", deployment.Name, condition.Message)
+		}
+	}
+
 	replicasSetList, err := getReplicaSetsByDeployment(clientset, deployment)
 	if err != nil {
 		return err

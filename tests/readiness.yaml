@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: readiness
+  labels:
+    app: readiness
+spec:
+  replicas: 3
+  progressDeadlineSeconds: 10
+  selector:
+    matchLabels:
+      app: readiness
+  template:
+    metadata:
+      labels:
+        app: readiness
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.10
+        command: ["sleep", "7200"]
+        readinessProbe:
+          exec:
+            command: ["false"]
+          initialDelaySeconds: 0
+          periodSeconds: 2
