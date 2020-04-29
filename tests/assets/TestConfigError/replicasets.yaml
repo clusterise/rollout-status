@@ -1,0 +1,65 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2020-04-29T13:29:18Z"
+    generation: 1
+    labels:
+      app: envs
+      pod-template-hash: 545d4667d5
+    name: envs-545d4667d5
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: envs
+      uid: 63edaad1-bce6-484c-9b95-18111449f284
+    resourceVersion: "40061"
+    selfLink: /apis/apps/v1/namespaces/default/replicasets/envs-545d4667d5
+    uid: b20a48d3-9b8f-4e31-a6b9-853a0edf1025
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: envs
+        pod-template-hash: 545d4667d5
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: envs
+          pod-template-hash: 545d4667d5
+      spec:
+        containers:
+        - env:
+          - name: FAILING_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: missing-key
+                name: missing-config
+          image: alpine:3.10
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

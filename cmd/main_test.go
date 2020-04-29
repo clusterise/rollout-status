@@ -82,6 +82,10 @@ func TestImagePullBackOff(t *testing.T) {
 	assertRolloutFailure(t, `Container "main" is in "ImagePullBackOff": Back-off pulling image "bogus-image:does-not-exist"`)
 }
 
+func TestConfigError(t *testing.T) {
+	assertRolloutFailure(t, `Container "main" is in "CreateContainerConfigError": configmap "missing-config" not found`)
+}
+
 func TestErrImagePull(t *testing.T) {
 	assertRolloutFailure(t, `Container "main" is in "ErrImagePull": rpc error: code = Unknown desc = Error response from daemon: pull access denied for bogus-image, repository does not exist or may require 'docker login': denied: requested access to the resource is denied`)
 }

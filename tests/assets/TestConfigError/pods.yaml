@@ -1,0 +1,109 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T13:29:18Z"
+    generateName: envs-545d4667d5-
+    labels:
+      app: envs
+      pod-template-hash: 545d4667d5
+    name: envs-545d4667d5-rqhn4
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: envs-545d4667d5
+      uid: b20a48d3-9b8f-4e31-a6b9-853a0edf1025
+    resourceVersion: "40066"
+    selfLink: /api/v1/namespaces/default/pods/envs-545d4667d5-rqhn4
+    uid: 8d0aad10-e918-4737-a67c-200b088bd286
+  spec:
+    containers:
+    - env:
+      - name: FAILING_ENV
+        valueFrom:
+          configMapKeyRef:
+            key: missing-key
+            name: missing-config
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T13:29:18Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T13:29:18Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T13:29:18Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T13:29:18Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: alpine:3.10
+      imageID: ""
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: configmap "missing-config" not found
+          reason: CreateContainerConfigError
+    hostIP: 192.168.99.100
+    phase: Pending
+    podIP: 172.17.0.3
+    podIPs:
+    - ip: 172.17.0.3
+    qosClass: BestEffort
+    startTime: "2020-04-29T13:29:18Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

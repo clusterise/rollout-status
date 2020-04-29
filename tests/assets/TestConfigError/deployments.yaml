@@ -1,0 +1,76 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"envs"},"name":"envs","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"envs"}},"template":{"metadata":{"labels":{"app":"envs"}},"spec":{"containers":[{"env":[{"name":"FAILING_ENV","valueFrom":{"configMapKeyRef":{"key":"missing-key","name":"missing-config"}}}],"image":"alpine:3.10","name":"main"}]}}}}
+    creationTimestamp: "2020-04-29T13:29:18Z"
+    generation: 1
+    labels:
+      app: envs
+    name: envs
+    namespace: default
+    resourceVersion: "40063"
+    selfLink: /apis/apps/v1/namespaces/default/deployments/envs
+    uid: 63edaad1-bce6-484c-9b95-18111449f284
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: envs
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: envs
+      spec:
+        containers:
+        - env:
+          - name: FAILING_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: missing-key
+                name: missing-config
+          image: alpine:3.10
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2020-04-29T13:29:18Z"
+      lastUpdateTime: "2020-04-29T13:29:18Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2020-04-29T13:29:18Z"
+      lastUpdateTime: "2020-04-29T13:29:18Z"
+      message: ReplicaSet "envs-545d4667d5" is progressing.
+      reason: ReplicaSetUpdated
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 1
+    unavailableReplicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

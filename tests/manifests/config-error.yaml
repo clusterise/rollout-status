@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: envs
+  labels:
+    app: envs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: envs
+  template:
+    metadata:
+      labels:
+        app: envs
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.10
+        env:
+        - name: FAILING_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: missing-config
+              key: missing-key
