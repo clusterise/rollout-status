@@ -40,6 +40,17 @@ func TestContainerCreating(t *testing.T) {
 	assert.Equal(t, `container main is in ContainerCreating`, re.Message)
 }
 
+func TestInitContainer(t *testing.T) {
+	wrapper := mockWrapperFromAssets(t.Name())
+	rolloutStatus := status.TestRollout(wrapper, IgnoredByMock, IgnoredByMock)
+
+	re, ok := rolloutStatus.Error.(status.RolloutError)
+	assert.True(t, ok)
+
+	assert.True(t, rolloutStatus.Continue)
+	assert.Equal(t, `container main is in PodInitializing`, re.Message)
+}
+
 func assertRolloutFailure(t *testing.T, expectedMessage string) {
 	wrapper := mockWrapperFromAssets(t.Name())
 	rolloutStatus := status.TestRollout(wrapper, IgnoredByMock, IgnoredByMock)
@@ -49,6 +60,14 @@ func assertRolloutFailure(t *testing.T, expectedMessage string) {
 
 	assert.False(t, rolloutStatus.Continue)
 	assert.Equal(t, expectedMessage, re.Message)
+}
+
+func TestInitError(t *testing.T) {
+	assertRolloutFailure(t, `init container init-1 is in Error`)
+}
+
+func TestInitCrashLoopBackOff(t *testing.T) {
+	assertRolloutFailure(t, `init container init-1 is in CrashLoopBackOff`)
 }
 
 func TestLimitRange(t *testing.T) {

@@ -1,0 +1,71 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2020-04-29T10:49:45Z"
+    generation: 1
+    labels:
+      app: init-container-failure
+      pod-template-hash: 5d9bb99b78
+    name: init-container-failure-5d9bb99b78
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: init-container-failure
+      uid: df27049f-4d2e-4ef9-819f-9b9d3077d6b0
+    resourceVersion: "28097"
+    selfLink: /apis/apps/v1/namespaces/default/replicasets/init-container-failure-5d9bb99b78
+    uid: 06ab6949-710b-46f9-971d-9ab67ee3734d
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: init-container-failure
+        pod-template-hash: 5d9bb99b78
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: init-container-failure
+          pod-template-hash: 5d9bb99b78
+      spec:
+        containers:
+        - command:
+          - sleep
+          - "7200"
+          image: alpine:3.10
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - "false"
+          image: alpine:3.10
+          imagePullPolicy: IfNotPresent
+          name: init-1
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

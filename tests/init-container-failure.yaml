@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: init-container-failure
+  labels:
+    app: init-container-failure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: init-container-failure
+  template:
+    metadata:
+      labels:
+        app: init-container-failure
+    spec:
+      initContainers:
+      - name: init-1
+        image: alpine:3.10
+        command: ["false"]
+      containers:
+      - name: main
+        image: alpine:3.10
+        command: ["sleep", "7200"]

@@ -1,0 +1,138 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T10:49:45Z"
+    generateName: init-container-failure-5d9bb99b78-
+    labels:
+      app: init-container-failure
+      pod-template-hash: 5d9bb99b78
+    name: init-container-failure-5d9bb99b78-p4c2s
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: init-container-failure-5d9bb99b78
+      uid: 06ab6949-710b-46f9-971d-9ab67ee3734d
+    resourceVersion: "28118"
+    selfLink: /api/v1/namespaces/default/pods/init-container-failure-5d9bb99b78-p4c2s
+    uid: fc9a8203-92a9-4ef7-8184-5b3846cf94f0
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "7200"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - "false"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: init-1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:49:45Z"
+      message: 'containers with incomplete status: [init-1]'
+      reason: ContainersNotInitialized
+      status: "False"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:49:45Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:49:45Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:49:45Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: alpine:3.10
+      imageID: ""
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          reason: PodInitializing
+    hostIP: 192.168.99.100
+    initContainerStatuses:
+    - containerID: docker://19cae7cf67e7c271f05e85ba334bc4b930dd4870017e6c1ad8962abb769f1067
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:f0e9534a598e501320957059cb2a23774b4d4072e37c7b2cf7e95b241f019e35
+      lastState:
+        terminated:
+          containerID: docker://19cae7cf67e7c271f05e85ba334bc4b930dd4870017e6c1ad8962abb769f1067
+          exitCode: 1
+          finishedAt: "2020-04-29T10:49:47Z"
+          reason: Error
+          startedAt: "2020-04-29T10:49:47Z"
+      name: init-1
+      ready: false
+      restartCount: 1
+      state:
+        waiting:
+          message: back-off 10s restarting failed container=init-1 pod=init-container-failure-5d9bb99b78-p4c2s_default(fc9a8203-92a9-4ef7-8184-5b3846cf94f0)
+          reason: CrashLoopBackOff
+    phase: Pending
+    podIP: 172.17.0.4
+    podIPs:
+    - ip: 172.17.0.4
+    qosClass: BestEffort
+    startTime: "2020-04-29T10:49:45Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
