@@ -7,7 +7,7 @@ import (
 )
 
 type outputType struct {
-	Success bool        `json:"success"`
+	Success bool         `json:"success"`
 	Error   *errorOutput `json:"error,omitempty"`
 }
 
@@ -27,7 +27,7 @@ type errorOutput struct {
 
 func (o Output) errorOutputFrom(err error) *errorOutput {
 	if err == nil {
-	    return nil
+		return nil
 	}
 
 	if re, ok := err.(status.RolloutError); ok {
