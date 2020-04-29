@@ -8,7 +8,7 @@ import (
 
 type outputType struct {
 	Success bool        `json:"success"`
-	Error   errorOutput `json:"error"`
+	Error   *errorOutput `json:"error,omitempty"`
 }
 
 type errorType string
@@ -25,7 +25,11 @@ type errorOutput struct {
 	Log     string         `json:"log,omitempty"`
 }
 
-func (o Output) errorOutputFrom(err error) errorOutput {
+func (o Output) errorOutputFrom(err error) *errorOutput {
+	if err == nil {
+	    return nil
+	}
+
 	if re, ok := err.(status.RolloutError); ok {
 		errOut := errorOutput{
 			Code:    re.Failure,
@@ -41,9 +45,9 @@ func (o Output) errorOutputFrom(err error) errorOutput {
 			errOut.Log = string(logBytes)
 		}
 
-		return errOut
+		return &errOut
 	}
-	return errorOutput{
+	return &errorOutput{
 		Message: err.Error(),
 		Type:    ErrorTypeProgram,
 	}
@@ -60,5 +64,6 @@ func (o Output) PrintResult(rollout status.RolloutStatus) error {
 		return err
 	}
 	_, err = fmt.Fprintf(o.writer, string(outBytes))
+	o.writer.Write([]byte{'\n'})
 	return err
 }
