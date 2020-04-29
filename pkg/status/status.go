@@ -9,6 +9,8 @@ type RolloutStatus struct {
 	Error    error `json:"error"`
 }
 
+// Rollout is not completed and it will not succeed with a high certainty.
+// Also returned for program issues not directly relevant to the rollout.
 func RolloutFatal(err error) RolloutStatus {
 	return RolloutStatus{
 		Continue: false,
@@ -16,6 +18,9 @@ func RolloutFatal(err error) RolloutStatus {
 	}
 }
 
+// Rollout is not completed but there is a chance it will eventually succeed.
+// Returned for valid flow (ContainerCreating -> init containers -> not ready -> ready)
+// as well as for error states under a deadline.
 func RolloutErrorProgressing(err error) RolloutStatus {
 	return RolloutStatus{
 		Continue: true,
@@ -23,6 +28,7 @@ func RolloutErrorProgressing(err error) RolloutStatus {
 	}
 }
 
+// Rollout completed successfully
 func RolloutOk() RolloutStatus {
 	return RolloutStatus{
 		Continue: false,

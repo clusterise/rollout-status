@@ -63,11 +63,11 @@ func assertRolloutFailure(t *testing.T, expectedMessage string) {
 }
 
 func TestInitError(t *testing.T) {
-	assertRolloutFailure(t, `init container "init-1" is in "Error"`)
+	assertRolloutFailure(t, `container "init-1" is in "Error"`)
 }
 
 func TestInitCrashLoopBackOff(t *testing.T) {
-	assertRolloutFailure(t, `init container "init-1" is in "CrashLoopBackOff"`)
+	assertRolloutFailure(t, `container "init-1" is in "CrashLoopBackOff": back-off 10s restarting failed container=init-1 pod=init-container-failure-5d9bb99b78-p4c2s_default(fc9a8203-92a9-4ef7-8184-5b3846cf94f0)`)
 }
 
 func TestLimitRange(t *testing.T) {

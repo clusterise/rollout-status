@@ -7,52 +7,31 @@ import (
 )
 
 func TestPodStatus(pod *v1.Pod) RolloutStatus {
+	aggregatedStatus := RolloutStatus{
+		Continue: true,
+		Error:    nil,
+	}
 	for _, initStatus := range pod.Status.InitContainerStatuses {
-		if initStatus.State.Waiting != nil {
-			reason := initStatus.State.Waiting.Reason
-			switch reason {
-			case "CrashLoopBackOff":
-				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-				err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
-				return RolloutFatal(err)
+		status := TestContainerStatus(&initStatus)
+		if status.Error != nil {
+			if !status.Continue {
+				return status
 			}
-		}
-		if initStatus.State.Terminated != nil {
-			reason := initStatus.State.Terminated.Reason
-			switch reason {
-			case "Error":
-				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-				err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
-				return RolloutFatal(err)
-			}
+			aggregatedStatus.Error = status.Error
 		}
 	}
 
 	for _, containerStatus := range pod.Status.ContainerStatuses {
-		// https://github.com/kubernetes/kubernetes/blob/4fda1207e347af92e649b59d60d48c7021ba0c54/pkg/kubelet/container/sync_result.go#L37
-		if containerStatus.State.Waiting != nil {
-			reason := containerStatus.State.Waiting.Reason
-			switch reason {
-			case "ContainerCreating":
-				fallthrough
-			case "PodInitializing":
-				err := MakeRolloutErorr("container %q is in %q", containerStatus.Name, reason)
-				return RolloutErrorProgressing(err)
-
-			case "CrashLoopBackOff":
-				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-				fallthrough
-			case "RunContainerError":
-				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-				fallthrough
-
-			case "ErrImagePull":
-				fallthrough
-			case "ImagePullBackOff":
-				err := MakeRolloutErorr("container %q is in %q: %v", containerStatus.Name, reason, containerStatus.State.Waiting.Message)
-				return RolloutFatal(err)
+		status := TestContainerStatus(&containerStatus)
+		if status.Error != nil {
+			if !status.Continue {
+				return status
 			}
+			aggregatedStatus.Error = status.Error
 		}
+	}
+	if aggregatedStatus.Error != nil {
+		return aggregatedStatus
 	}
 
 	if pod.Status.Phase == v1.PodPending {
