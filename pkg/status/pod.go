@@ -30,8 +30,6 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 
 	for _, containerStatus := range pod.Status.ContainerStatuses {
 		// https://github.com/kubernetes/kubernetes/blob/4fda1207e347af92e649b59d60d48c7021ba0c54/pkg/kubelet/container/sync_result.go#L37
-		// fail if the pod is containerruntimeerror (misconfigured env, missing image, etc)
-		// fail if the pod is in crashloop backoff
 		if containerStatus.State.Waiting != nil {
 			reason := containerStatus.State.Waiting.Reason
 			switch reason {
