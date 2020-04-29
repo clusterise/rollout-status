@@ -1,0 +1,174 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "2"
+    creationTimestamp: "2020-04-24T15:52:14Z"
+    generation: 6
+    labels:
+      app: success
+      pod-template-hash: 75dc74548c
+    name: success-75dc74548c
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: success
+      uid: e46d215c-03aa-4cd2-beb3-fa2f6c85dbfa
+    resourceVersion: "1562"
+    selfLink: /apis/apps/v1/namespaces/default/replicasets/success-75dc74548c
+    uid: d9ca5f4e-12d1-4127-8480-22e3c47e17c0
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: success
+        pod-template-hash: 75dc74548c
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: success
+          pod-template-hash: 75dc74548c
+      spec:
+        containers:
+        - command:
+          - sleep
+          - "7201"
+          image: alpine:3.11
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    observedGeneration: 6
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2020-04-24T15:46:49Z"
+    generation: 4
+    labels:
+      app: success
+      pod-template-hash: 844db67cf8
+    name: success-844db67cf8
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: success
+      uid: e46d215c-03aa-4cd2-beb3-fa2f6c85dbfa
+    resourceVersion: "1406"
+    selfLink: /apis/apps/v1/namespaces/default/replicasets/success-844db67cf8
+    uid: 7d0077dc-b8d3-4829-bc06-b79050ee0fc4
+  spec:
+    replicas: 0
+    selector:
+      matchLabels:
+        app: success
+        pod-template-hash: 844db67cf8
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: success
+          pod-template-hash: 844db67cf8
+      spec:
+        containers:
+        - command:
+          - sleep
+          - "7200"
+          image: alpine:3.11
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    observedGeneration: 4
+    replicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "3"
+    creationTimestamp: "2020-04-24T15:52:54Z"
+    generation: 3
+    labels:
+      app: success
+      pod-template-hash: 857f4965f
+    name: success-857f4965f
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: success
+      uid: e46d215c-03aa-4cd2-beb3-fa2f6c85dbfa
+    resourceVersion: "1554"
+    selfLink: /apis/apps/v1/namespaces/default/replicasets/success-857f4965f
+    uid: 3d99f495-f0b2-4c03-8515-d9c304c08aa4
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: success
+        pod-template-hash: 857f4965f
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: success
+          pod-template-hash: 857f4965f
+      spec:
+        containers:
+        - command:
+          - sleep
+          - "7200"
+          image: alpine:3.10
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 3
+    fullyLabeledReplicas: 3
+    observedGeneration: 3
+    readyReplicas: 3
+    replicas: 3
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

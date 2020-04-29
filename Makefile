@@ -12,6 +12,10 @@ preflight:
 
 .PHONY: test
 test:
+	go test dite.pro/rollout-status/...
+
+.PHONY: test-e2e
+test-e2e:
 	./test-e2e.sh $(REPO):$(TAG)
 
 .PHONY: cleanup
