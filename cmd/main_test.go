@@ -87,7 +87,7 @@ func TestErrImagePull(t *testing.T) {
 }
 
 func TestPending(t *testing.T) {
-	assertRolloutFailure(t, `failed to scheduled pod: 0/1 nodes are available: 1 Insufficient memory.`)
+	assertRolloutFailure(t, `failed to schedule pod: 0/1 nodes are available: 1 Insufficient memory.`)
 }
 
 func TestRunContainerError(t *testing.T) {
