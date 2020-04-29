@@ -14,13 +14,18 @@ IMAGE="$1"
 #done
 
 function assert-selector-message() {
+    assert-selector-message-ns "$1" "default" "$2"
+}
+
+function assert-selector-message-ns() {
     SELECTOR="$1"
-    MESSAGE="$2"
+    NAMESPACE="$2"
+    MESSAGE="$3"
     { docker run --rm -it \
         -v $HOME/.kube:/root/.kube:ro \
         -v /Users/mikulas/.minikube/profiles/minikube:/Users/mikulas/.minikube/profiles/minikube:ro \
         -v /Users/mikulas/.minikube/ca.crt:/Users/mikulas/.minikube/ca.crt:ro \
-        "$IMAGE" -namespace=default -selector="$SELECTOR" || true
+        "$IMAGE" -namespace="$NAMESPACE" -selector="$SELECTOR" || true
     } \
     | tee .output \
     | grep --silent --fixed-strings "$MESSAGE" \
@@ -35,10 +40,18 @@ function assert-selector-message() {
     echo "$SELECTOR ok"
 }
 
-assert-selector-message "app=success" 'Rollout successfully completed'
-assert-selector-message "app=invalid-image" 'Rollout failed: container main is in ImagePullBackOff: Back-off pulling image "bogus-image:does-not-exist"'
-assert-selector-message "app=pending" 'Rollout failed: failed to scheduled pod: 0/1 nodes are available: 1 Insufficient memory.'
-assert-selector-message "app=crashloop-backoff" 'Rollout failed: container main is in CrashLoopBackOff'
+assert-selector-message "app=not-found" \
+    'Selector "app=not-found" did not match any Deployments'
+assert-selector-message "app=success" \
+    'Rollout successfully completed'
+assert-selector-message-ns "app=resource-quota" "resource-quota" \
+    'Rollout failed: replicaset resource-quota-6884c5558d failed to create pods: pods "resource-quota-6884c5558d-bc5pq" is forbidden: exceeded quota: main, requested: memory=200Mi, used: memory=0, limited: memory=100Mi'
+assert-selector-message "app=invalid-image" \
+    'Rollout failed: container main is in ImagePullBackOff: Back-off pulling image "bogus-image:does-not-exist"'
+assert-selector-message "app=pending" \
+    'Rollout failed: failed to scheduled pod: 0/1 nodes are available: 1 Insufficient memory.'
+assert-selector-message "app=crashloop-backoff" \
+    'Rollout failed: container main is in CrashLoopBackOff'
 
 #for TEST in tests/*.yaml; do
 #    echo "$TEST"

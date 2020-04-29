@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: resource-quota
+
+---
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: main
+  namespace: resource-quota
+spec:
+  hard:
+    memory: 100Mi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-quota
+  namespace: resource-quota
+  labels:
+    app: resource-quota
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: resource-quota
+  template:
+    metadata:
+      labels:
+        app: resource-quota
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.10
+        command: ["sleep", "7200"]
+        resources:
+          requests:
+            memory: 200Mi # more than resource quota, will fail to schedule
