@@ -50,7 +50,10 @@ func RolloutOk() RolloutStatus {
 
 type RolloutError struct {
 	Failure Failure
-	Message string `json:"message"`
+	Message string
+
+	Container     string
+	Pod           string
 }
 
 func (re RolloutError) Error() string {

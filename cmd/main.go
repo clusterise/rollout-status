@@ -2,8 +2,8 @@ package main
 
 import (
 	"dite.pro/rollout-status/pkg/client"
+	"dite.pro/rollout-status/pkg/output"
 	"dite.pro/rollout-status/pkg/status"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"k8s.io/client-go/kubernetes"
@@ -38,16 +38,15 @@ func main() {
 	for {
 		rollout := status.TestRollout(wrapper, *namespace, *selector)
 		if !rollout.Continue {
-			out := RolloutOutput(rollout)
-			outBytes, err := json.MarshalIndent(out, "", "  ")
+			err := output.MakeOutput(os.Stdout, wrapper).PrintResult(rollout)
 			if err != nil {
-				panic(err.Error())
+			    panic(err)
 			}
-			fmt.Println(string(outBytes))
-			if out.Success {
-				os.Exit(0)
+
+			if rollout.Error != nil {
+				os.Exit(1)
 			}
-			os.Exit(1)
+			os.Exit(0)
 		}
 		time.Sleep(10 * time.Second) // TODO configure
 	}

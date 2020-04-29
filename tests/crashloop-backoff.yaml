@@ -17,4 +17,17 @@ spec:
       containers:
       - name: main
         image: alpine:3.11
-        command: ["false"]
+        command:
+          - sh
+          - -c
+          - |
+            cat <<'EOF'
+            panic: invalid configuration: [unable to read client-key /Users/mikulas/.minikube/profiles/minikube/client.key for minikube due to open /Users/mikulas/.minikube/profiles/minikube/client.key: no such file or directory, unable to read certificate-authority /Users/mikulas/.minikube/ca.crt for minikube due to open /Users/mikulas/.minikube/ca.crt: no such file or directory]
+
+            goroutine 1 [running]:
+            main.makeClientset(0xc000041440, 0x12, 0x0)
+            	/src/cmd/main.go:57 +0xfb
+            main.main()
+            	/src/cmd/main.go:34 +0x21c
+            EOF
+            exit 1

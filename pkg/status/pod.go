@@ -15,6 +15,11 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 		status := TestContainerStatus(&initStatus)
 		if status.Error != nil {
 			if !status.Continue {
+				if re, ok := status.Error.(RolloutError); ok {
+					re.Container = initStatus.Name
+					re.Pod = pod.Name
+					status.Error = re
+				}
 				return status
 			}
 			aggregatedStatus.Error = status.Error
@@ -25,6 +30,11 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 		status := TestContainerStatus(&containerStatus)
 		if status.Error != nil {
 			if !status.Continue {
+				if re, ok := status.Error.(RolloutError); ok {
+					re.Container = containerStatus.Name
+					re.Pod = pod.Name
+					status.Error = re
+				}
 				return status
 			}
 			aggregatedStatus.Error = status.Error
