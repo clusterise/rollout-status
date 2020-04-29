@@ -1,0 +1,70 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2020-04-29T09:39:11Z"
+    generation: 1
+    labels:
+      app: limit-range
+      pod-template-hash: 7dfcd777fd
+    name: limit-range-7dfcd777fd
+    namespace: limit-range
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: limit-range
+      uid: bc3730a5-efb6-4a7b-a523-601bf52f1874
+    resourceVersion: "22908"
+    selfLink: /apis/apps/v1/namespaces/limit-range/replicasets/limit-range-7dfcd777fd
+    uid: 3d882783-2888-4abb-87c7-6e2da935cd4e
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: limit-range
+        pod-template-hash: 7dfcd777fd
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: limit-range
+          pod-template-hash: 7dfcd777fd
+      spec:
+        containers:
+        - command:
+          - sleep
+          - "7200"
+          image: alpine:3.10
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources:
+            requests:
+              memory: 200Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2020-04-29T09:39:11Z"
+      message: 'Pod "limit-range-7dfcd777fd-kmgsc" is invalid: spec.containers[0].resources.requests:
+        Invalid value: "200Mi": must be less than or equal to memory limit'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    observedGeneration: 1
+    replicas: 0
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
