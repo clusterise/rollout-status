@@ -9,7 +9,7 @@ Example
 -------
 
 ```console
-go run dite.pro/rollout-status/cmd -selector app=crashloop-backoff
+go run github.com/clusterise/rollout-status/cmd -selector app=crashloop-backoff
 {
   "success": false,
   "error": {
@@ -20,3 +20,8 @@ go run dite.pro/rollout-status/cmd -selector app=crashloop-backoff
   }
 }
 ```
+
+Output
+------
+
+See `schema.json` for details. The program blocks until rollout succeeds (as `success=true`) or is not progressing and effectively failed (`success=false`). In the latter case an `error` object is returned. It contains all details that should be neccessary to remediate the issue. Besides `error.mesage` your pipeline should also switch on `error.code` and print help specific to your pipeline.

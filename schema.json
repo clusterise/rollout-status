@@ -1,0 +1,50 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema",
+	"type": "object",
+	"required": ["success"],
+	"properties": {
+		"success": {"type": "boolean"}
+	},
+	"oneOf": [
+		{
+			"additionalProperties": false,
+			"properties": {
+				"success": {"const": true}
+			}
+		}, {
+			"additionalProperties": false,
+			"required": ["success", "error"],
+			"properties": {
+				"success": {"const": false},
+				"error": {
+					"type": "object",
+					"additionalProperties": false,
+					"required": ["code", "message", "type"],
+					"properties": {
+						"type": {
+							"type": "string",
+							"enum": [
+								"program",
+								"rollout"
+							]
+						},
+						"code": {
+							"type": "string",
+							"enum": [
+								"",
+								"not-found",
+								"process-crashing",
+								"invalid-image",
+								"resource-limits-exceeded",
+								"scheduling",
+								"not-progressing"
+							]
+						},
+						"message": {"type": "string"},
+						"log": {"type": "string"}
+					}
+				}
+			}
+		}
+	]
+}
