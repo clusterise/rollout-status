@@ -3,13 +3,13 @@ package main
 import (
 	"dite.pro/rollout-status/pkg/client"
 	"dite.pro/rollout-status/pkg/status"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func main() {
@@ -38,14 +38,18 @@ func main() {
 	}
 	wrapper := client.FromClientset(clientset)
 
-	rollout := status.TestRollout(wrapper, *namespace, *selector)
-	out, err := json.MarshalIndent(rollout, "", "  ")
-	if err != nil {
-		panic(err.Error())
+	for {
+		rollout := status.TestRollout(wrapper, *namespace, *selector)
+		if !rollout.Continue {
+			if rollout.Error == nil {
+				fmt.Println("Rollout successfully completed")
+			} else {
+				fmt.Printf("Rollout failed: %v\n", rollout.Error)
+				os.Exit(1)
+			}
+		}
+		time.Sleep(10 * time.Second)
 	}
-
-	fmt.Println(string(out))
-	//log.Println("Rollout successfully completed")
 }
 
 func homeDir() string {
