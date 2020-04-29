@@ -11,7 +11,7 @@ func TestRollout(wrapper client.Kubernetes, namespace, selector string) RolloutS
 	}
 
 	if len(deployments.Items) == 0 {
-		err = MakeRolloutErorr("Selector %q did not match any deployments in namespace %q", selector, namespace)
+		err = MakeRolloutErorr(FailureNotFound, "Selector %q did not match any deployments in namespace %q", selector, namespace)
 		return RolloutFatal(err)
 	}
 

@@ -13,7 +13,7 @@ const RevisionAnnotation = "deployment.kubernetes.io/revision"
 func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) RolloutStatus {
 	for _, condition := range deployment.Status.Conditions {
 		if condition.Type == appsv1.DeploymentProgressing && condition.Status == v1.ConditionFalse {
-			err := MakeRolloutErorr("deployment %q is not progressing: %v", deployment.Name, condition.Message)
+			err := MakeRolloutErorr(FailureNotProgressing, "Deployment %q is not progressing: %v", deployment.Name, condition.Message)
 			return RolloutFatal(err)
 		}
 	}
@@ -25,7 +25,7 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 
 	lastRevision, ok := deployment.Annotations[RevisionAnnotation]
 	if !ok {
-		return RolloutFatal(fmt.Errorf("missing annotation %q on deployment %q", RevisionAnnotation, deployment.Name))
+		return RolloutFatal(fmt.Errorf("Missing annotation %q on deployment %q", RevisionAnnotation, deployment.Name))
 	}
 
 	aggregatedStatus := RolloutStatus{
@@ -35,7 +35,7 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 	for _, replicaSet := range replicasSetList.Items {
 		rsRevision, ok := replicaSet.Annotations[RevisionAnnotation]
 		if !ok {
-			aggregatedStatus.Error = fmt.Errorf("missing annotation %q on replicaset %q", RevisionAnnotation, replicaSet.Name)
+			aggregatedStatus.Error = fmt.Errorf("Missing annotation %q on replicaset %q", RevisionAnnotation, replicaSet.Name)
 			aggregatedStatus.Continue = false
 			break
 		}

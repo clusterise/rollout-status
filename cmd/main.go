@@ -3,6 +3,7 @@ package main
 import (
 	"dite.pro/rollout-status/pkg/client"
 	"dite.pro/rollout-status/pkg/status"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"k8s.io/client-go/kubernetes"
@@ -13,7 +14,7 @@ import (
 )
 
 func main() {
-	namespace := flag.String("namespace", "", "Namespace to watch")
+	namespace := flag.String("namespace", "", "Namespace to watch rollout in")
 	selector := flag.String("selector", "", "Label selector to watch, kubectl format such as release=foo,component=frontend")
 
 	var kubeconfig *string
@@ -28,20 +29,25 @@ func main() {
 	clientset := makeClientset(*kubeconfig)
 	wrapper := client.FromClientset(clientset)
 
+	if *selector == "" {
+		fmt.Fprintf(os.Stderr, "Missing value for flag selector\n")
+		flag.Usage()
+		os.Exit(2)
+	}
+
 	for {
 		rollout := status.TestRollout(wrapper, *namespace, *selector)
 		if !rollout.Continue {
-			if rollout.Error == nil {
-				fmt.Println("Rollout successfully completed")
-
-			} else if re, ok := rollout.Error.(status.RolloutError); ok {
-				fmt.Printf("Rollout failed: %v\n", re)
-				os.Exit(1)
-
-			} else {
-				fmt.Printf("Program failure: %v\n", rollout.Error)
-				os.Exit(2)
+			out := RolloutOutput(rollout)
+			outBytes, err := json.MarshalIndent(out, "", "  ")
+			if err != nil {
+				panic(err.Error())
 			}
+			fmt.Println(string(outBytes))
+			if out.Success {
+				os.Exit(0)
+			}
+			os.Exit(1)
 		}
 		time.Sleep(10 * time.Second) // TODO configure
 	}

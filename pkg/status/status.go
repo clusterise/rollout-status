@@ -4,9 +4,21 @@ import (
 	"fmt"
 )
 
+type Failure string
+
+const (
+	NoFailure                     Failure = ""
+	FailureNotFound               Failure = "not-found"
+	FailureProcessCrashing        Failure = "process-crashing"
+	FailureInvalidImage           Failure = "invalid-image"
+	FailureResourceLimitsExceeded Failure = "resource-limits-exceeded"
+	FailureScheduling             Failure = "scheduling"
+	FailureNotProgressing         Failure = "not-progressing"
+)
+
 type RolloutStatus struct {
-	Continue bool  `json:"continue"`
-	Error    error `json:"error"`
+	Continue bool
+	Error    error
 }
 
 // Rollout is not completed and it will not succeed with a high certainty.
@@ -37,6 +49,7 @@ func RolloutOk() RolloutStatus {
 }
 
 type RolloutError struct {
+	Failure Failure
 	Message string `json:"message"`
 }
 
@@ -44,8 +57,9 @@ func (re RolloutError) Error() string {
 	return re.Message
 }
 
-func MakeRolloutErorr(format string, args ...interface{}) RolloutError {
+func MakeRolloutErorr(failure Failure, format string, args ...interface{}) RolloutError {
 	return RolloutError{
+		Failure: failure,
 		Message: fmt.Sprintf(format, args...),
 	}
 }

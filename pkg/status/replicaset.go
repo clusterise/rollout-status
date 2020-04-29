@@ -9,7 +9,7 @@ import (
 func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSet) RolloutStatus {
 	for _, rsCondition := range replicaSet.Status.Conditions {
 		if rsCondition.Type == appsv1.ReplicaSetReplicaFailure && rsCondition.Status == v1.ConditionTrue {
-			err := MakeRolloutErorr("replicaset %q failed to create pods: %v", replicaSet.Name, rsCondition.Message)
+			err := MakeRolloutErorr(FailureResourceLimitsExceeded, "ReplicaSet %q failed to create pods: %v", replicaSet.Name, rsCondition.Message)
 			return RolloutFatal(err)
 		}
 	}
