@@ -1,14 +1,13 @@
 package status
 
 import (
+	"dite.pro/rollout-status/pkg/client"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
 	"log"
 )
 
-func TestReplicaSetStatus(clientset *kubernetes.Clientset, replicaSet appsv1.ReplicaSet) RolloutStatus {
+func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSet) RolloutStatus {
 	log.Printf("  checking status for replicaset %v", replicaSet.Name)
 
 	for _, rsCondition := range replicaSet.Status.Conditions {
@@ -18,7 +17,7 @@ func TestReplicaSetStatus(clientset *kubernetes.Clientset, replicaSet appsv1.Rep
 		}
 	}
 
-	podList, err := getPodsByReplicaSet(clientset, &replicaSet)
+	podList, err := wrapper.ListV1Pods(&replicaSet)
 	if err != nil {
 		return RolloutFatal(err)
 	}
@@ -42,13 +41,4 @@ func TestReplicaSetStatus(clientset *kubernetes.Clientset, replicaSet appsv1.Rep
 	}
 
 	return aggregatedStatus
-}
-
-func getPodsByReplicaSet(clientset *kubernetes.Clientset, replicasSet *appsv1.ReplicaSet) (*v1.PodList, error) {
-	selector, err := metav1.LabelSelectorAsSelector(replicasSet.Spec.Selector)
-	if err != nil {
-		return nil, err
-	}
-	options := metav1.ListOptions{LabelSelector: selector.String()}
-	return clientset.CoreV1().Pods(replicasSet.Namespace).List(options)
 }

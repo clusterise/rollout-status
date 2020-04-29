@@ -1,18 +1,17 @@
 package status
 
 import (
+	"dite.pro/rollout-status/pkg/client"
 	"fmt"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/client-go/kubernetes"
 	"log"
 )
 
 // https://github.com/kubernetes/kubernetes/blob/dde6e8e7465468c32642659cb708a5cc922add64/staging/src/k8s.io/kubectl/pkg/util/deployment/deployment.go#L36
 const RevisionAnnotation = "deployment.kubernetes.io/revision"
 
-func DeploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) RolloutStatus {
+func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) RolloutStatus {
 	log.Printf("checking status for deployment %v", deployment.Name)
 
 	for _, condition := range deployment.Status.Conditions {
@@ -22,7 +21,7 @@ func DeploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 		}
 	}
 
-	replicasSetList, err := getReplicaSetsByDeployment(clientset, deployment)
+	replicasSetList, err := wrapper.ListAppsV1ReplicaSets(deployment)
 	if err != nil {
 		return RolloutFatal(err)
 	}
@@ -52,7 +51,7 @@ func DeploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 			continue
 		}
 
-		status := TestReplicaSetStatus(clientset, replicaSet)
+		status := TestReplicaSetStatus(wrapper, replicaSet)
 		if status.Error != nil {
 			groupErr.Add(status.Error)
 		}
@@ -66,13 +65,4 @@ func DeploymentStatus(clientset *kubernetes.Clientset, deployment *appsv1.Deploy
 	}
 
 	return aggregatedStatus
-}
-
-func getReplicaSetsByDeployment(clientset *kubernetes.Clientset, deployment *appsv1.Deployment) (*appsv1.ReplicaSetList, error) {
-	selector, err := metav1.LabelSelectorAsSelector(deployment.Spec.Selector)
-	if err != nil {
-		return nil, err
-	}
-	options := metav1.ListOptions{LabelSelector: selector.String()}
-	return clientset.AppsV1().ReplicaSets(deployment.Namespace).List(options)
 }

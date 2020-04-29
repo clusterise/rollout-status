@@ -1,6 +1,7 @@
 package main
 
 import (
+	"dite.pro/rollout-status/pkg/client"
 	"dite.pro/rollout-status/pkg/status"
 	"encoding/json"
 	"flag"
@@ -35,8 +36,9 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+	wrapper := client.FromClientset(clientset)
 
-	rollout := status.TestRollout(clientset, *namespace, *selector)
+	rollout := status.TestRollout(wrapper, *namespace, *selector)
 	out, err := json.MarshalIndent(rollout, "", "  ")
 	if err != nil {
 		panic(err.Error())
