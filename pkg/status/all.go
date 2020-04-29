@@ -15,9 +15,9 @@ func TestRollout(wrapper client.Kubernetes, namespace, selector string) RolloutS
 		return RolloutFatal(err)
 	}
 
-	groupErr := ErrorGroup{}
 	aggregatedStatus := RolloutStatus{
 		Continue: true,
+		Error: nil,
 	}
 
 	//https://github.com/kubernetes/kubernetes/blob/master/staging/src/k8s.io/kubectl/pkg/cmd/rollout/rollout_status.go
@@ -25,15 +25,12 @@ func TestRollout(wrapper client.Kubernetes, namespace, selector string) RolloutS
 	for _, deployment := range deployments.Items {
 		status := DeploymentStatus(wrapper, &deployment)
 		if status.Error != nil {
-			groupErr.Add(status.Error)
+			aggregatedStatus.Error = err
 		}
 		if !status.Continue {
 			aggregatedStatus.Continue = false
 			break
 		}
-	}
-	if !groupErr.Empty() {
-		aggregatedStatus.Error = groupErr
 	}
 	return aggregatedStatus
 }

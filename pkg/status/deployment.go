@@ -32,14 +32,14 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 	}
 	log.Printf("  last revision is %v", lastRevision)
 
-	groupErr := ErrorGroup{}
 	aggregatedStatus := RolloutStatus{
 		Continue: true,
+		Error: nil,
 	}
 	for _, replicaSet := range replicasSetList.Items {
 		rsRevision, ok := replicaSet.Annotations[RevisionAnnotation]
 		if !ok {
-			groupErr.Add(fmt.Errorf("missing annotation %v on replicaset %v", RevisionAnnotation, replicaSet.Name))
+			aggregatedStatus.Error = fmt.Errorf("missing annotation %v on replicaset %v", RevisionAnnotation, replicaSet.Name)
 			aggregatedStatus.Continue = false
 			break
 		}
@@ -53,15 +53,12 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 
 		status := TestReplicaSetStatus(wrapper, replicaSet)
 		if status.Error != nil {
-			groupErr.Add(status.Error)
+			aggregatedStatus.Error = err
 		}
 		if !status.Continue {
 			aggregatedStatus.Continue = false
 			break
 		}
-	}
-	if !groupErr.Empty() {
-		aggregatedStatus.Error = groupErr
 	}
 
 	return aggregatedStatus

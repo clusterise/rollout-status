@@ -22,22 +22,19 @@ func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSe
 		return RolloutFatal(err)
 	}
 
-	groupErr := ErrorGroup{}
 	aggregatedStatus := RolloutStatus{
 		Continue: true,
+		Error: nil,
 	}
 	for _, pod := range podList.Items {
 		status := TestPodStatus(&pod)
 		if status.Error != nil {
-			groupErr.Add(err)
+			aggregatedStatus.Error = err
 		}
 		if !status.Continue {
 			aggregatedStatus.Continue = false
 			break
 		}
-	}
-	if !groupErr.Empty() {
-		aggregatedStatus.Error = groupErr
 	}
 
 	return aggregatedStatus
