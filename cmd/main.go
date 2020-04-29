@@ -43,12 +43,17 @@ func main() {
 		if !rollout.Continue {
 			if rollout.Error == nil {
 				fmt.Println("Rollout successfully completed")
-			} else {
-				fmt.Printf("Rollout failed: %v\n", rollout.Error)
+
+			} else if re, ok := rollout.Error.(status.RolloutError); ok {
+				fmt.Printf("Rollout failed: %v\n", re)
 				os.Exit(1)
+
+			} else {
+				fmt.Printf("Program failure: %v\n", rollout.Error)
+				os.Exit(2)
 			}
 		}
-		time.Sleep(10 * time.Second)
+		time.Sleep(10 * time.Second) // TODO configure
 	}
 }
 
