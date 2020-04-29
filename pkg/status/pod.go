@@ -17,8 +17,13 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 		if containerStatus.State.Waiting != nil {
 			switch containerStatus.State.Waiting.Reason {
 			case "CrashLoopBackOff":
+				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
+				fallthrough
+			case "ErrImagePull":
 				fallthrough
 			case "ImagePullBackOff":
+				fallthrough
+			case "RunContainerError":
 				err := MakeRolloutErorr("container %v is in %v: %v", containerStatus.Name, containerStatus.State.Waiting.Reason, containerStatus.State.Waiting.Message)
 				return RolloutFatal(err)
 			}

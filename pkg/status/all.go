@@ -25,7 +25,7 @@ func TestRollout(wrapper client.Kubernetes, namespace, selector string) RolloutS
 	for _, deployment := range deployments.Items {
 		status := DeploymentStatus(wrapper, &deployment)
 		if status.Error != nil {
-			aggregatedStatus.Error = err
+			aggregatedStatus.Error = status.Error
 		}
 		if !status.Continue {
 			aggregatedStatus.Continue = false

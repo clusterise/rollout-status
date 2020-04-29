@@ -1,0 +1,64 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2020-04-29T10:15:59Z"
+    generation: 1
+    labels:
+      app: pending
+      pod-template-hash: 7456749cd8
+    name: pending-7456749cd8
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: pending
+      uid: 5c8a8dcb-ea8d-4fb9-911d-254b7b068e18
+    resourceVersion: "25087"
+    selfLink: /apis/apps/v1/namespaces/default/replicasets/pending-7456749cd8
+    uid: b5914b17-27a4-43ad-bbb4-97acba6c3310
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: pending
+        pod-template-hash: 7456749cd8
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: pending
+          pod-template-hash: 7456749cd8
+      spec:
+        containers:
+        - command:
+          - sleep
+          - "7200"
+          image: alpine:3.11
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources:
+            requests:
+              memory: 1Ti
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 3
+    observedGeneration: 1
+    replicas: 3
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

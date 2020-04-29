@@ -29,7 +29,7 @@ func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSe
 	for _, pod := range podList.Items {
 		status := TestPodStatus(&pod)
 		if status.Error != nil {
-			aggregatedStatus.Error = err
+			aggregatedStatus.Error = status.Error
 		}
 		if !status.Continue {
 			aggregatedStatus.Continue = false

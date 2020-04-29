@@ -1,0 +1,61 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2020-04-29T10:23:13Z"
+    generation: 1
+    labels:
+      app: run-container-error
+      pod-template-hash: 5c94d47bdc
+    name: run-container-error-5c94d47bdc
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: run-container-error
+      uid: 78f05805-c653-4bcb-aadf-42e64bf7ecde
+    resourceVersion: "25714"
+    selfLink: /apis/apps/v1/namespaces/default/replicasets/run-container-error-5c94d47bdc
+    uid: 9b397626-5bbf-4b5a-b83d-9ff419dbb4c6
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: run-container-error
+        pod-template-hash: 5c94d47bdc
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: run-container-error
+          pod-template-hash: 5c94d47bdc
+      spec:
+        containers:
+        - command:
+          - binary-not-found
+          image: alpine:3.11
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

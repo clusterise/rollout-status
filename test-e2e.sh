@@ -40,14 +40,6 @@ function assert-selector-message-ns() {
     echo "$SELECTOR ok"
 }
 
-assert-selector-message-ns "app=limit-range" "limit-range" \
-    'Rollout failed: replicaset limit-range-7dfcd777fd failed to create pods: Pod "limit-range-7dfcd777fd-f99jf" is invalid: spec.containers[0].resources.requests: Invalid value: "200Mi": must be less than or equal to memory limit'
-assert-selector-message-ns "app=resource-quota" "resource-quota" \
-    'Rollout failed: replicaset resource-quota-6884c5558d failed to create pods: pods "resource-quota-6884c5558d-bc5pq" is forbidden: exceeded quota: main, requested: memory=200Mi, used: memory=0, limited: memory=100Mi'
-assert-selector-message "app=invalid-image" \
-    'Rollout failed: container main is in ImagePullBackOff: Back-off pulling image "bogus-image:does-not-exist"'
-assert-selector-message "app=pending" \
-    'Rollout failed: failed to scheduled pod: 0/1 nodes are available: 1 Insufficient memory.'
 assert-selector-message "app=crashloop-backoff" \
     'Rollout failed: container main is in CrashLoopBackOff'
 assert-selector-message "app=readiness" \

@@ -1,0 +1,70 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2020-04-29T10:14:44Z"
+    generation: 1
+    labels:
+      app: resource-quota
+      pod-template-hash: 6884c5558d
+    name: resource-quota-6884c5558d
+    namespace: resource-quota
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: resource-quota
+      uid: 69d96026-90a7-4417-8590-fdddde5327f0
+    resourceVersion: "24826"
+    selfLink: /apis/apps/v1/namespaces/resource-quota/replicasets/resource-quota-6884c5558d
+    uid: a37a15f5-8db6-4af2-8d8e-734eca9b8981
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: resource-quota
+        pod-template-hash: 6884c5558d
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: resource-quota
+          pod-template-hash: 6884c5558d
+      spec:
+        containers:
+        - command:
+          - sleep
+          - "7200"
+          image: alpine:3.10
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources:
+            requests:
+              memory: 200Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2020-04-29T10:14:44Z"
+      message: 'pods "resource-quota-6884c5558d-jzwxq" is forbidden: exceeded quota:
+        main, requested: memory=200Mi, used: memory=0, limited: memory=100Mi'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    observedGeneration: 1
+    replicas: 0
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

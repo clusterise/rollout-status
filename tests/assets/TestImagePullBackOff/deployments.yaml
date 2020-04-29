@@ -1,0 +1,70 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"invalid-image"},"name":"invalid-image","namespace":"default"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"invalid-image"}},"template":{"metadata":{"labels":{"app":"invalid-image"}},"spec":{"containers":[{"image":"bogus-image:does-not-exist","name":"main"}]}}}}
+    creationTimestamp: "2020-04-29T10:34:55Z"
+    generation: 1
+    labels:
+      app: invalid-image
+    name: invalid-image
+    namespace: default
+    resourceVersion: "26794"
+    selfLink: /apis/apps/v1/namespaces/default/deployments/invalid-image
+    uid: 22d236f3-3231-42a3-826d-c5175690f7c1
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: invalid-image
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: invalid-image
+      spec:
+        containers:
+        - image: bogus-image:does-not-exist
+          imagePullPolicy: IfNotPresent
+          name: main
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2020-04-29T10:34:55Z"
+      lastUpdateTime: "2020-04-29T10:34:55Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2020-04-29T10:34:55Z"
+      lastUpdateTime: "2020-04-29T10:34:55Z"
+      message: ReplicaSet "invalid-image-5bf67fdb6b" is progressing.
+      reason: ReplicaSetUpdated
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 1
+    unavailableReplicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

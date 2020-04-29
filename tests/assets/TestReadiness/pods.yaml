@@ -1,0 +1,660 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T08:00:37Z"
+    deletionGracePeriodSeconds: 30
+    deletionTimestamp: "2020-04-29T10:13:41Z"
+    generateName: readiness-78d744cf44-
+    labels:
+      app: readiness
+      pod-template-hash: 78d744cf44
+    name: readiness-78d744cf44-6528t
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: readiness-78d744cf44
+      uid: ed500468-2123-4abc-acb5-230bfac31a85
+    resourceVersion: "24483"
+    selfLink: /api/v1/namespaces/default/pods/readiness-78d744cf44-6528t
+    uid: ddd0718c-cff1-4bfc-b9ec-7e1b2cf1f6af
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "7200"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      readinessProbe:
+        exec:
+          command:
+          - "false"
+        failureThreshold: 3
+        periodSeconds: 2
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://476735ad6c800584222163d962b782bc41244559d96d25c8b34f7fd3ed00375f
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:f0e9534a598e501320957059cb2a23774b4d4072e37c7b2cf7e95b241f019e35
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2020-04-29T08:00:39Z"
+    hostIP: 192.168.99.100
+    phase: Running
+    podIP: 172.17.0.13
+    podIPs:
+    - ip: 172.17.0.13
+    qosClass: BestEffort
+    startTime: "2020-04-29T08:00:37Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T10:13:23Z"
+    generateName: readiness-78d744cf44-
+    labels:
+      app: readiness
+      pod-template-hash: 78d744cf44
+    name: readiness-78d744cf44-fk876
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: readiness-78d744cf44
+      uid: b4d87621-d934-4b19-b196-b7385444789c
+    resourceVersion: "24563"
+    selfLink: /api/v1/namespaces/default/pods/readiness-78d744cf44-fk876
+    uid: 830f0dda-2047-4639-a828-c75eeeeb3728
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "7200"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      readinessProbe:
+        exec:
+          command:
+          - "false"
+        failureThreshold: 3
+        periodSeconds: 2
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://ee8ccf0bf714ff2cc92e3b3fbce1bd03b902491e325de666e531513de15db8a0
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:f0e9534a598e501320957059cb2a23774b4d4072e37c7b2cf7e95b241f019e35
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2020-04-29T10:13:24Z"
+    hostIP: 192.168.99.100
+    phase: Running
+    podIP: 172.17.0.2
+    podIPs:
+    - ip: 172.17.0.2
+    qosClass: BestEffort
+    startTime: "2020-04-29T10:13:23Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T08:00:37Z"
+    deletionGracePeriodSeconds: 30
+    deletionTimestamp: "2020-04-29T10:13:41Z"
+    generateName: readiness-78d744cf44-
+    labels:
+      app: readiness
+      pod-template-hash: 78d744cf44
+    name: readiness-78d744cf44-hbgng
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: readiness-78d744cf44
+      uid: ed500468-2123-4abc-acb5-230bfac31a85
+    resourceVersion: "24486"
+    selfLink: /api/v1/namespaces/default/pods/readiness-78d744cf44-hbgng
+    uid: 2afa1e17-7c29-4c8a-9777-dcd868e9ece1
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "7200"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      readinessProbe:
+        exec:
+          command:
+          - "false"
+        failureThreshold: 3
+        periodSeconds: 2
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://fd512997d95c54bb866dd4ae9b2a0b430ef9d5cdb16a2229266ad091ca9bcf0c
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:f0e9534a598e501320957059cb2a23774b4d4072e37c7b2cf7e95b241f019e35
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2020-04-29T08:00:39Z"
+    hostIP: 192.168.99.100
+    phase: Running
+    podIP: 172.17.0.14
+    podIPs:
+    - ip: 172.17.0.14
+    qosClass: BestEffort
+    startTime: "2020-04-29T08:00:37Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T10:13:23Z"
+    generateName: readiness-78d744cf44-
+    labels:
+      app: readiness
+      pod-template-hash: 78d744cf44
+    name: readiness-78d744cf44-q4npt
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: readiness-78d744cf44
+      uid: b4d87621-d934-4b19-b196-b7385444789c
+    resourceVersion: "24560"
+    selfLink: /api/v1/namespaces/default/pods/readiness-78d744cf44-q4npt
+    uid: 981ef4c6-16be-4cae-bcba-f8e41080b815
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "7200"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      readinessProbe:
+        exec:
+          command:
+          - "false"
+        failureThreshold: 3
+        periodSeconds: 2
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://cd35eab3c4c8aa505cdd735d890ecb355e1da1a807804021bac8fadd6100433c
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:f0e9534a598e501320957059cb2a23774b4d4072e37c7b2cf7e95b241f019e35
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2020-04-29T10:13:24Z"
+    hostIP: 192.168.99.100
+    phase: Running
+    podIP: 172.17.0.4
+    podIPs:
+    - ip: 172.17.0.4
+    qosClass: BestEffort
+    startTime: "2020-04-29T10:13:23Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T08:00:37Z"
+    deletionGracePeriodSeconds: 30
+    deletionTimestamp: "2020-04-29T10:13:41Z"
+    generateName: readiness-78d744cf44-
+    labels:
+      app: readiness
+      pod-template-hash: 78d744cf44
+    name: readiness-78d744cf44-rgb95
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: readiness-78d744cf44
+      uid: ed500468-2123-4abc-acb5-230bfac31a85
+    resourceVersion: "24488"
+    selfLink: /api/v1/namespaces/default/pods/readiness-78d744cf44-rgb95
+    uid: 9271823d-4de7-4653-a486-d7168455acf2
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "7200"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      readinessProbe:
+        exec:
+          command:
+          - "false"
+        failureThreshold: 3
+        periodSeconds: 2
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T08:00:37Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://637092612dfbad65523c96af5cbf1c196917d135059276c86a1e510d77e559c2
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:f0e9534a598e501320957059cb2a23774b4d4072e37c7b2cf7e95b241f019e35
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2020-04-29T08:00:39Z"
+    hostIP: 192.168.99.100
+    phase: Running
+    podIP: 172.17.0.15
+    podIPs:
+    - ip: 172.17.0.15
+    qosClass: BestEffort
+    startTime: "2020-04-29T08:00:37Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T10:13:23Z"
+    generateName: readiness-78d744cf44-
+    labels:
+      app: readiness
+      pod-template-hash: 78d744cf44
+    name: readiness-78d744cf44-v75ww
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: readiness-78d744cf44
+      uid: b4d87621-d934-4b19-b196-b7385444789c
+    resourceVersion: "24562"
+    selfLink: /api/v1/namespaces/default/pods/readiness-78d744cf44-v75ww
+    uid: 6e571023-cef5-4fae-9055-48b1830dc035
+  spec:
+    containers:
+    - command:
+      - sleep
+      - "7200"
+      image: alpine:3.10
+      imagePullPolicy: IfNotPresent
+      name: main
+      readinessProbe:
+        exec:
+          command:
+          - "false"
+        failureThreshold: 3
+        periodSeconds: 2
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:13:23Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: docker://4e1a31107f00e47ca0071cf19d473215318186f85505a0795a6bb5aa98c9a728
+      image: alpine:3.10
+      imageID: docker-pullable://alpine@sha256:f0e9534a598e501320957059cb2a23774b4d4072e37c7b2cf7e95b241f019e35
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2020-04-29T10:13:24Z"
+    hostIP: 192.168.99.100
+    phase: Running
+    podIP: 172.17.0.5
+    podIPs:
+    - ip: 172.17.0.5
+    qosClass: BestEffort
+    startTime: "2020-04-29T10:13:23Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

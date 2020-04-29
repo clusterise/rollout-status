@@ -1,0 +1,103 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2020-04-29T10:34:55Z"
+    generateName: invalid-image-5bf67fdb6b-
+    labels:
+      app: invalid-image
+      pod-template-hash: 5bf67fdb6b
+    name: invalid-image-5bf67fdb6b-4xgxk
+    namespace: default
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: invalid-image-5bf67fdb6b
+      uid: 761d5a09-52c8-4d20-b4b2-2b34542fc1a5
+    resourceVersion: "26821"
+    selfLink: /api/v1/namespaces/default/pods/invalid-image-5bf67fdb6b-4xgxk
+    uid: 9b0c9a0c-7b91-41db-8617-e7a63c8e1587
+  spec:
+    containers:
+    - image: bogus-image:does-not-exist
+      imagePullPolicy: IfNotPresent
+      name: main
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token-7bshj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: minikube
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: default-token-7bshj
+      secret:
+        defaultMode: 420
+        secretName: default-token-7bshj
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:34:55Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:34:55Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:34:55Z"
+      message: 'containers with unready status: [main]'
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2020-04-29T10:34:55Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: bogus-image:does-not-exist
+      imageID: ""
+      lastState: {}
+      name: main
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: Back-off pulling image "bogus-image:does-not-exist"
+          reason: ImagePullBackOff
+    hostIP: 192.168.99.100
+    phase: Pending
+    podIP: 172.17.0.3
+    podIPs:
+    - ip: 172.17.0.3
+    qosClass: BestEffort
+    startTime: "2020-04-29T10:34:55Z"
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""

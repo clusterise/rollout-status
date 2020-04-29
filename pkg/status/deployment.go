@@ -53,7 +53,7 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 
 		status := TestReplicaSetStatus(wrapper, replicaSet)
 		if status.Error != nil {
-			aggregatedStatus.Error = err
+			aggregatedStatus.Error = status.Error
 		}
 		if !status.Continue {
 			aggregatedStatus.Continue = false
