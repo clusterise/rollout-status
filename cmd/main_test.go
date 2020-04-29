@@ -29,6 +29,17 @@ func TestSuccess(t *testing.T) {
 	assert.Nil(t, rolloutStatus.Error)
 }
 
+func TestContainerCreating(t *testing.T) {
+	wrapper := mockWrapperFromAssets(t.Name())
+	rolloutStatus := status.TestRollout(wrapper, IgnoredByMock, IgnoredByMock)
+
+	re, ok := rolloutStatus.Error.(status.RolloutError)
+	assert.True(t, ok)
+
+	assert.True(t, rolloutStatus.Continue)
+	assert.Equal(t, `container main is in ContainerCreating`, re.Message)
+}
+
 func assertRolloutFailure(t *testing.T, expectedMessage string) {
 	wrapper := mockWrapperFromAssets(t.Name())
 	rolloutStatus := status.TestRollout(wrapper, IgnoredByMock, IgnoredByMock)

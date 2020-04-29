@@ -15,7 +15,11 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 		// fail if the pod is containerruntimeerror (misconfigured env, missing image, etc)
 		// fail if the pod is in crashloop backoff
 		if containerStatus.State.Waiting != nil {
-			switch containerStatus.State.Waiting.Reason {
+			reason := containerStatus.State.Waiting.Reason
+			switch reason {
+			case "ContainerCreating":
+				err := MakeRolloutErorr("container %v is in %v", containerStatus.Name, reason)
+				return RolloutErrorProgressing(err)
 			case "CrashLoopBackOff":
 				// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
 				fallthrough
@@ -24,7 +28,7 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 			case "ImagePullBackOff":
 				fallthrough
 			case "RunContainerError":
-				err := MakeRolloutErorr("container %v is in %v: %v", containerStatus.Name, containerStatus.State.Waiting.Reason, containerStatus.State.Waiting.Message)
+				err := MakeRolloutErorr("container %v is in %v: %v", containerStatus.Name, reason, containerStatus.State.Waiting.Message)
 				return RolloutFatal(err)
 			}
 		}

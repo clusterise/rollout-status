@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-creating
+  labels:
+    app: container-creating
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: container-creating
+  template:
+    metadata:
+      labels:
+        app: container-creating
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.10
+        command: ["sleep", "7200"]
