@@ -7,10 +7,7 @@ import (
 )
 
 func TestPodStatus(pod *v1.Pod) RolloutStatus {
-	aggregatedStatus := RolloutStatus{
-		Continue: true,
-		Error:    nil,
-	}
+	aggr := Aggregator{}
 	for _, initStatus := range pod.Status.InitContainerStatuses {
 		status := TestContainerStatus(&initStatus)
 		if status.Error != nil {
@@ -21,9 +18,12 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 					re.Container = initStatus.Name
 					status.Error = re
 				}
-				return status
 			}
-			aggregatedStatus.Error = status.Error
+		}
+
+		aggr.Add(status)
+		if fatal := aggr.Fatal(); fatal != nil {
+			return *fatal
 		}
 	}
 
@@ -37,13 +37,17 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 					re.Container = containerStatus.Name
 					status.Error = re
 				}
-				return status
 			}
-			aggregatedStatus.Error = status.Error
+		}
+
+		aggr.Add(status)
+		if fatal := aggr.Fatal(); fatal != nil {
+			return *fatal
 		}
 	}
-	if aggregatedStatus.Error != nil {
-		return aggregatedStatus
+	status := aggr.Resolve()
+	if status.Error != nil {
+		return status
 	}
 
 	if pod.Status.Phase == v1.PodPending {

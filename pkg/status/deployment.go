@@ -28,16 +28,11 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 		return RolloutFatal(fmt.Errorf("Missing annotation %q on deployment %q", RevisionAnnotation, deployment.Name))
 	}
 
-	aggregatedStatus := RolloutStatus{
-		Continue: true,
-		Error:    nil,
-	}
+	aggr := Aggregator{}
 	for _, replicaSet := range replicasSetList.Items {
 		rsRevision, ok := replicaSet.Annotations[RevisionAnnotation]
 		if !ok {
-			aggregatedStatus.Error = fmt.Errorf("Missing annotation %q on replicaset %q", RevisionAnnotation, replicaSet.Name)
-			aggregatedStatus.Continue = false
-			break
+			return RolloutFatal(fmt.Errorf("Missing annotation %q on replicaset %q", RevisionAnnotation, replicaSet.Name))
 		}
 
 		if rsRevision != lastRevision {
@@ -48,14 +43,10 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 		}
 
 		status := TestReplicaSetStatus(wrapper, replicaSet)
-		if status.Error != nil {
-			aggregatedStatus.Error = status.Error
-		}
-		if !status.Continue {
-			aggregatedStatus.Continue = false
-			break
+		aggr.Add(status)
+		if fatal := aggr.Fatal(); fatal != nil {
+			return *fatal
 		}
 	}
-
-	return aggregatedStatus
+	return aggr.Resolve()
 }

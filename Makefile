@@ -1,5 +1,5 @@
 REPO = clusterise/rollout-status
-TAG = 1.0
+TAG = 1.1
 
 all: build publish
 

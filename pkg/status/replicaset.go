@@ -19,20 +19,13 @@ func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSe
 		return RolloutFatal(err)
 	}
 
-	aggregatedStatus := RolloutStatus{
-		Continue: true,
-		Error:    nil,
-	}
+	aggr := Aggregator{}
 	for _, pod := range podList.Items {
 		status := TestPodStatus(&pod)
-		if status.Error != nil {
-			aggregatedStatus.Error = status.Error
-		}
-		if !status.Continue {
-			aggregatedStatus.Continue = false
-			break
+		aggr.Add(status)
+		if fatal := aggr.Fatal(); fatal != nil {
+			return *fatal
 		}
 	}
-
-	return aggregatedStatus
+	return aggr.Resolve()
 }
