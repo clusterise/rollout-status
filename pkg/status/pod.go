@@ -39,7 +39,7 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 			// fail if the pod is pending for X time
 			if condition.Type == v1.PodScheduled {
 				deadline := metav1.NewTime(time.Now().Add(time.Minute * -3)) // TODO configure
-				err := MakeRolloutErorr(FailureScheduling, "Failed to schedule pod: %v", condition.Message)
+				err := MakeRolloutError(FailureScheduling, "Failed to schedule pod: %v", condition.Message)
 
 				if condition.LastTransitionTime.Before(&deadline) {
 					return RolloutFatal(err)

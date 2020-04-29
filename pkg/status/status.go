@@ -57,7 +57,7 @@ func (re RolloutError) Error() string {
 	return re.Message
 }
 
-func MakeRolloutErorr(failure Failure, format string, args ...interface{}) RolloutError {
+func MakeRolloutError(failure Failure, format string, args ...interface{}) RolloutError {
 	return RolloutError{
 		Failure: failure,
 		Message: fmt.Sprintf(format, args...),

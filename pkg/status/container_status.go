@@ -10,7 +10,7 @@ func TestContainerStatus(status *v1.ContainerStatus) RolloutStatus {
 		case "ContainerCreating":
 			fallthrough
 		case "PodInitializing":
-			err := MakeRolloutErorr(NoFailure, "Container %q is in %q", status.Name, reason)
+			err := MakeRolloutError(NoFailure, "Container %q is in %q", status.Name, reason)
 			return RolloutErrorProgressing(err)
 
 		case "CrashLoopBackOff":
@@ -18,13 +18,13 @@ func TestContainerStatus(status *v1.ContainerStatus) RolloutStatus {
 			fallthrough
 		case "RunContainerError":
 			// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-			err := MakeRolloutErorr(FailureProcessCrashing, "Container %q is in %q: %v", status.Name, reason, status.State.Waiting.Message)
+			err := MakeRolloutError(FailureProcessCrashing, "Container %q is in %q: %v", status.Name, reason, status.State.Waiting.Message)
 			return RolloutFatal(err)
 
 		case "ErrImagePull":
 			fallthrough
 		case "ImagePullBackOff":
-			err := MakeRolloutErorr(FailureInvalidImage, "Container %q is in %q: %v", status.Name, reason, status.State.Waiting.Message)
+			err := MakeRolloutError(FailureInvalidImage, "Container %q is in %q: %v", status.Name, reason, status.State.Waiting.Message)
 			return RolloutFatal(err)
 		}
 	}
@@ -34,7 +34,7 @@ func TestContainerStatus(status *v1.ContainerStatus) RolloutStatus {
 		switch reason {
 		case "Error":
 			// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-			err := MakeRolloutErorr(FailureProcessCrashing, "Container %q is in %q", status.Name, reason)
+			err := MakeRolloutError(FailureProcessCrashing, "Container %q is in %q", status.Name, reason)
 			return RolloutFatal(err)
 		}
 	}
