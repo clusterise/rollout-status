@@ -37,7 +37,7 @@ func TestContainerCreating(t *testing.T) {
 	assert.True(t, ok)
 
 	assert.True(t, rolloutStatus.Continue)
-	assert.Equal(t, `container main is in ContainerCreating`, re.Message)
+	assert.Equal(t, `container "main" is in "ContainerCreating"`, re.Message)
 }
 
 func TestInitContainer(t *testing.T) {
@@ -48,7 +48,7 @@ func TestInitContainer(t *testing.T) {
 	assert.True(t, ok)
 
 	assert.True(t, rolloutStatus.Continue)
-	assert.Equal(t, `container main is in PodInitializing`, re.Message)
+	assert.Equal(t, `container "main" is in "PodInitializing"`, re.Message)
 }
 
 func assertRolloutFailure(t *testing.T, expectedMessage string) {
@@ -63,27 +63,27 @@ func assertRolloutFailure(t *testing.T, expectedMessage string) {
 }
 
 func TestInitError(t *testing.T) {
-	assertRolloutFailure(t, `init container init-1 is in Error`)
+	assertRolloutFailure(t, `init container "init-1" is in "Error"`)
 }
 
 func TestInitCrashLoopBackOff(t *testing.T) {
-	assertRolloutFailure(t, `init container init-1 is in CrashLoopBackOff`)
+	assertRolloutFailure(t, `init container "init-1" is in "CrashLoopBackOff"`)
 }
 
 func TestLimitRange(t *testing.T) {
-	assertRolloutFailure(t, `replicaset limit-range-7dfcd777fd failed to create pods: Pod "limit-range-7dfcd777fd-kmgsc" is invalid: spec.containers[0].resources.requests: Invalid value: "200Mi": must be less than or equal to memory limit`)
+	assertRolloutFailure(t, `replicaset "limit-range-7dfcd777fd" failed to create pods: Pod "limit-range-7dfcd777fd-kmgsc" is invalid: spec.containers[0].resources.requests: Invalid value: "200Mi": must be less than or equal to memory limit`)
 }
 
 func TestResourceQuota(t *testing.T) {
-	assertRolloutFailure(t, `replicaset resource-quota-6884c5558d failed to create pods: pods "resource-quota-6884c5558d-jzwxq" is forbidden: exceeded quota: main, requested: memory=200Mi, used: memory=0, limited: memory=100Mi`)
+	assertRolloutFailure(t, `replicaset "resource-quota-6884c5558d" failed to create pods: pods "resource-quota-6884c5558d-jzwxq" is forbidden: exceeded quota: main, requested: memory=200Mi, used: memory=0, limited: memory=100Mi`)
 }
 
 func TestImagePullBackOff(t *testing.T) {
-	assertRolloutFailure(t, `container main is in ImagePullBackOff: Back-off pulling image "bogus-image:does-not-exist"`)
+	assertRolloutFailure(t, `container "main" is in "ImagePullBackOff": Back-off pulling image "bogus-image:does-not-exist"`)
 }
 
 func TestErrImagePull(t *testing.T) {
-	assertRolloutFailure(t, `container main is in ErrImagePull: rpc error: code = Unknown desc = Error response from daemon: pull access denied for bogus-image, repository does not exist or may require 'docker login': denied: requested access to the resource is denied`)
+	assertRolloutFailure(t, `container "main" is in "ErrImagePull": rpc error: code = Unknown desc = Error response from daemon: pull access denied for bogus-image, repository does not exist or may require 'docker login': denied: requested access to the resource is denied`)
 }
 
 func TestPending(t *testing.T) {
@@ -91,13 +91,13 @@ func TestPending(t *testing.T) {
 }
 
 func TestRunContainerError(t *testing.T) {
-	assertRolloutFailure(t, `container main is in RunContainerError: failed to start container "7e28d6efbe847126d763f15d88a68a225bb9b746651ca82abeba419e315e7c18": Error response from daemon: OCI runtime create failed: container_linux.go:349: starting container process caused "exec: \"binary-not-found\": executable file not found in $PATH": unknown`)
+	assertRolloutFailure(t, `container "main" is in "RunContainerError": failed to start container "7e28d6efbe847126d763f15d88a68a225bb9b746651ca82abeba419e315e7c18": Error response from daemon: OCI runtime create failed: container_linux.go:349: starting container process caused "exec: \"binary-not-found\": executable file not found in $PATH": unknown`)
 }
 
 func TestCrashloopBackoff(t *testing.T) {
-	assertRolloutFailure(t, `container main is in CrashLoopBackOff: back-off 10s restarting failed container=main pod=crashloop-backoff-58894954f8-68pcr_default(6c016294-6f4c-4f68-a919-3f8385dee8fd)`)
+	assertRolloutFailure(t, `container "main" is in "CrashLoopBackOff": back-off 10s restarting failed container=main pod=crashloop-backoff-58894954f8-68pcr_default(6c016294-6f4c-4f68-a919-3f8385dee8fd)`)
 }
 
 func TestReadiness(t *testing.T) {
-	assertRolloutFailure(t, `deployment readiness is not progressing: ReplicaSet "readiness-78d744cf44" has timed out progressing.`)
+	assertRolloutFailure(t, `deployment "readiness" is not progressing: ReplicaSet "readiness-78d744cf44" has timed out progressing.`)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 func TestPodStatus(pod *v1.Pod) RolloutStatus {
-	log.Printf("    checking status for pod %v", pod.Name)
+	log.Printf("    checking status for pod %q", pod.Name)
 
 	for _, initStatus := range pod.Status.InitContainerStatuses {
 		if initStatus.State.Waiting!= nil {
@@ -16,7 +16,7 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 			switch reason {
 				case "CrashLoopBackOff":
 					// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-					err := MakeRolloutErorr("init container %v is in %v", initStatus.Name, reason)
+					err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
 					return RolloutFatal(err)
 			}
 		}
@@ -25,7 +25,7 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 			switch reason {
 				case "Error":
 					// TODO this should retry but have a deadline, all restarts fall to CrashLoopBackOff
-					err := MakeRolloutErorr("init container %v is in %v", initStatus.Name, reason)
+					err := MakeRolloutErorr("init container %q is in %q", initStatus.Name, reason)
 					return RolloutFatal(err)
 			}
 		}
@@ -41,7 +41,7 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 			case "ContainerCreating":
 				fallthrough
 			case "PodInitializing":
-				err := MakeRolloutErorr("container %v is in %v", containerStatus.Name, reason)
+				err := MakeRolloutErorr("container %q is in %q", containerStatus.Name, reason)
 				return RolloutErrorProgressing(err)
 
 			case "CrashLoopBackOff":
@@ -54,7 +54,7 @@ func TestPodStatus(pod *v1.Pod) RolloutStatus {
 			case "ErrImagePull":
 				fallthrough
 			case "ImagePullBackOff":
-				err := MakeRolloutErorr("container %v is in %v: %v", containerStatus.Name, reason, containerStatus.State.Waiting.Message)
+				err := MakeRolloutErorr("container %q is in %q: %v", containerStatus.Name, reason, containerStatus.State.Waiting.Message)
 				return RolloutFatal(err)
 			}
 		}

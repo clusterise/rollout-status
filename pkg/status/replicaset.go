@@ -8,11 +8,11 @@ import (
 )
 
 func TestReplicaSetStatus(wrapper client.Kubernetes, replicaSet appsv1.ReplicaSet) RolloutStatus {
-	log.Printf("  checking status for replicaset %v", replicaSet.Name)
+	log.Printf("  checking status for replicaset %q", replicaSet.Name)
 
 	for _, rsCondition := range replicaSet.Status.Conditions {
 		if rsCondition.Type == appsv1.ReplicaSetReplicaFailure && rsCondition.Status == v1.ConditionTrue {
-			err := MakeRolloutErorr("replicaset %v failed to create pods: %v", replicaSet.Name, rsCondition.Message)
+			err := MakeRolloutErorr("replicaset %q failed to create pods: %v", replicaSet.Name, rsCondition.Message)
 			return RolloutFatal(err)
 		}
 	}
