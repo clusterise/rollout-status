@@ -8,7 +8,7 @@ build: Dockerfile preflight
 
 preflight:
 	go mod vendor
-	go fmt dite.pro/rollout-status/cmd
+	go fmt dite.pro/rollout-status/...
 
 .PHONY: test
 test:
