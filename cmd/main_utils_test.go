@@ -1,7 +1,7 @@
 package main_test
 
 import (
-	"dite.pro/rollout-status/pkg/client"
+	"github.com/clusterise/rollout-status/pkg/client"
 	"io/ioutil"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"

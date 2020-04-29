@@ -1,11 +1,11 @@
 package main
 
 import (
-	"dite.pro/rollout-status/pkg/client"
-	"dite.pro/rollout-status/pkg/output"
-	"dite.pro/rollout-status/pkg/status"
 	"flag"
 	"fmt"
+	"github.com/clusterise/rollout-status/pkg/client"
+	"github.com/clusterise/rollout-status/pkg/output"
+	"github.com/clusterise/rollout-status/pkg/status"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
 	"os"
@@ -40,7 +40,7 @@ func main() {
 		if !rollout.Continue {
 			err := output.MakeOutput(os.Stdout, wrapper).PrintResult(rollout)
 			if err != nil {
-			    panic(err)
+				panic(err)
 			}
 
 			if rollout.Error != nil {

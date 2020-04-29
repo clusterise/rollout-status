@@ -1,8 +1,8 @@
 package status
 
 import (
-	"dite.pro/rollout-status/pkg/client"
 	"fmt"
+	"github.com/clusterise/rollout-status/pkg/client"
 	appsv1 "k8s.io/api/apps/v1"
 	v1 "k8s.io/api/core/v1"
 )

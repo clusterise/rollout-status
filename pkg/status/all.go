@@ -1,7 +1,7 @@
 package status
 
 import (
-	"dite.pro/rollout-status/pkg/client"
+	"github.com/clusterise/rollout-status/pkg/client"
 )
 
 func TestRollout(wrapper client.Kubernetes, namespace, selector string) RolloutStatus {

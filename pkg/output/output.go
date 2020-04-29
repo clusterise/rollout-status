@@ -1,9 +1,9 @@
 package output
 
 import (
-	"dite.pro/rollout-status/pkg/status"
 	"encoding/json"
 	"fmt"
+	"github.com/clusterise/rollout-status/pkg/status"
 )
 
 type outputType struct {
@@ -36,7 +36,7 @@ func (o Output) errorOutputFrom(err error) errorOutput {
 		if errOut.Code == status.FailureProcessCrashing {
 			logBytes, err := o.wrapper.TrailContainerLogs(re.Namespace, re.Pod, re.Container)
 			if err != nil {
-			    return o.errorOutputFrom(err)
+				return o.errorOutputFrom(err)
 			}
 			errOut.Log = string(logBytes)
 		}

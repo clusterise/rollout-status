@@ -1,25 +1,25 @@
-REPO = rollout-status
+REPO = clusterise/rollout-status
 TAG = 1.0
 
-all: build
+all: build publish
 
+.PHONY: build
 build: Dockerfile preflight
 	docker build -t $(REPO):$(TAG) .
 
+.PHONY: publish
+publish: build
+	docker push $(REPO):$(TAG)
+
+.PHONY: preflight
 preflight:
 	go mod vendor
-	go fmt dite.pro/rollout-status/...
+	go fmt github.com/clusterise/rollout-status/...
 
 .PHONY: test
 test:
-	go test dite.pro/rollout-status/...
-
-.PHONY: test-e2e
-test-e2e:
-	./test-e2e.sh $(REPO):$(TAG)
+	go test github.com/clusterise/rollout-status/...
 
 .PHONY: cleanup
 cleanup:
 	rm -rf vendor
-	minikube stop
-	minikube delete

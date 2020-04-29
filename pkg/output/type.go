@@ -1,7 +1,7 @@
 package output
 
 import (
-	"dite.pro/rollout-status/pkg/client"
+	"github.com/clusterise/rollout-status/pkg/client"
 	"io"
 )
 
@@ -12,7 +12,7 @@ type Output struct {
 
 func MakeOutput(writer io.Writer, wrapper client.Kubernetes) *Output {
 	return &Output{
-		writer: writer,
+		writer:  writer,
 		wrapper: wrapper,
 	}
 }

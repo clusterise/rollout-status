@@ -1,4 +1,4 @@
-module dite.pro/rollout-status
+module github.com/clusterise/rollout-status
 
 go 1.12
 
