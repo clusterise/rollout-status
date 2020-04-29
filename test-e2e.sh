@@ -44,6 +44,8 @@ assert-selector-message "app=not-found" \
     'Selector "app=not-found" did not match any Deployments'
 assert-selector-message "app=success" \
     'Rollout successfully completed'
+assert-selector-message-ns "app=limit-range" "limit-range" \
+    'Rollout failed: replicaset limit-range-7dfcd777fd failed to create pods: Pod "limit-range-7dfcd777fd-f99jf" is invalid: spec.containers[0].resources.requests: Invalid value: "200Mi": must be less than or equal to memory limit'
 assert-selector-message-ns "app=resource-quota" "resource-quota" \
     'Rollout failed: replicaset resource-quota-6884c5558d failed to create pods: pods "resource-quota-6884c5558d-bc5pq" is forbidden: exceeded quota: main, requested: memory=200Mi, used: memory=0, limited: memory=100Mi'
 assert-selector-message "app=invalid-image" \

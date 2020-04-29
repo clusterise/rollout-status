@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: limit-range
+
+---
+
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: main
+  namespace: limit-range
+spec:
+  limits:
+  - type: Container
+    max:
+      memory: 150Mi
+    min:
+      memory: 100Mi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: limit-range
+  namespace: limit-range
+  labels:
+    app: limit-range
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: limit-range
+  template:
+    metadata:
+      labels:
+        app: limit-range
+    spec:
+      containers:
+      - name: main
+        image: alpine:3.10
+        command: ["sleep", "7200"]
+        resources:
+          requests:
+            memory: 200Mi # more than limit range, will fail to schedule
