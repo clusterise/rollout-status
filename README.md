@@ -16,13 +16,28 @@ Docker Image is [available on Docker Hub](https://hub.docker.com/repository/dock
 docker run -v "$HOME/.kube:/root/.kube:ro" clusterise/rollout-status:1.0 -namespace "$NAMESPACE" -selector "$SELECTOR"
 ```
 
-Since the script is intended for a CI/CI, you will likely copy the binary to your own `linux-amd64` image:
+Since the program is intended for a CI/CD pipeline, you will likely copy the binary to your own `linux-amd64` image:
 
 ```Dockerfile
 # ...
 
 COPY --from=clusterise/rollout-status:1.0 /rollout-status /opt/rollout-status 
 ```
+
+Overview of handled states
+--------------------------
+
+Listed by `error.code`:
+
+* `not-found`: Deployment or the ReplicaSet was not found in given `-namespace`. This is may be a pipeline setup error or indicate other deployment issues that prevented your manifests from being saved to Kubernetes.
+* `invalid-config`: Includes `ErrImagePull`, `ImagePullBackOff`, `init:ErrImagePull`, `init:ImagePullBackOff`. Fails the deployment immediately as we expect the image to be built and published before we attempt application deployment. Also incldues `CreateContainerConfigError` and `init:CreateContainerConfigError` which happen when invalid envs are defined (such as mounting non-existent ConfigMap) etc.
+* `resource-limits-exceeded`: Aborts deployment when ReplicaSet is unable to create pods. This may happen when available resources are limited with `ResourceQuota` or `LimitRange`.
+* `process-crashing`: Application is scheduled and runs, but exits. This encompases `RunContainerError`, `CrashLoopBackOff` as well as init container errors `init:RunContainerError` and `init:CrashLoopBackOff` and termination `Error`.
+* `scheduling`: Waits for `Pending` pods for (currently hardcoded) deadline. If not scheduled, deployment fails.
+* `not-progressing`: Waits until [`.spec.progressDeadlineSeconds`](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#progress-deadline-seconds). If Pods do not become ready, deployment fails.
+
+Transient blocking states. Multiple states such as waiting for scheduling, `PodInitializing`, `ContainerCreating` as well as waiting for pods to become ready block rollout-status. The final result is reported only after a pod fails or all pods transition to ready state and succeed. 
+
 
 Example
 -------
