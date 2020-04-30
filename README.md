@@ -13,7 +13,7 @@ Docker Image is [available on Docker Hub](https://hub.docker.com/repository/dock
 ).
 
 ```console
-docker run -v "$HOME/.kube:/root/.kube:ro" clusterise/rollout-status:1.0 -namespace "$NAMESPACE" -selector "$SELECTOR"
+docker run -v "$HOME/.kube:/root/.kube:ro" clusterise/rollout-status:1.2 -namespace "$NAMESPACE" -selector "$SELECTOR"
 ```
 
 Since the program is intended for a CI/CD pipeline, you will likely copy the binary to your own `linux-amd64` image:
@@ -21,7 +21,7 @@ Since the program is intended for a CI/CD pipeline, you will likely copy the bin
 ```Dockerfile
 # ...
 
-COPY --from=clusterise/rollout-status:1.0 /rollout-status /opt/rollout-status 
+COPY --from=clusterise/rollout-status:1.2 /rollout-status /opt/rollout-status 
 ```
 
 Overview of handled states
