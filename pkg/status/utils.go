@@ -2,7 +2,7 @@ package status
 
 type Aggregator struct {
 	statuses []RolloutStatus
-	fatal *RolloutStatus
+	fatal    *RolloutStatus
 }
 
 func (agg *Aggregator) Add(status RolloutStatus) {

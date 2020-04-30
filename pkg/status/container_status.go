@@ -26,7 +26,7 @@ func TestContainerStatus(status *v1.ContainerStatus) RolloutStatus {
 		case "ImagePullBackOff":
 			fallthrough
 		case "CreateContainerConfigError":
-			err := MakeRolloutError(FailureInvalidImage, "Container %q is in %q: %v", status.Name, reason, status.State.Waiting.Message)
+			err := MakeRolloutError(FailureInvalidConfig, "Container %q is in %q: %v", status.Name, reason, status.State.Waiting.Message)
 			return RolloutFatal(err)
 		}
 	}

@@ -10,7 +10,7 @@ const (
 	NoFailure                     Failure = ""
 	FailureNotFound               Failure = "not-found"
 	FailureProcessCrashing        Failure = "process-crashing"
-	FailureInvalidImage           Failure = "invalid-image"
+	FailureInvalidConfig          Failure = "invalid-config"
 	FailureResourceLimitsExceeded Failure = "resource-limits-exceeded"
 	FailureScheduling             Failure = "scheduling"
 	FailureNotProgressing         Failure = "not-progressing"

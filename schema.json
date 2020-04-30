@@ -34,7 +34,7 @@
 								"",
 								"not-found",
 								"process-crashing",
-								"invalid-image",
+								"invalid-config",
 								"resource-limits-exceeded",
 								"scheduling",
 								"not-progressing"
