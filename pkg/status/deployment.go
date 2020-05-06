@@ -11,13 +11,6 @@ import (
 const RevisionAnnotation = "deployment.kubernetes.io/revision"
 
 func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) RolloutStatus {
-	for _, condition := range deployment.Status.Conditions {
-		if condition.Type == appsv1.DeploymentProgressing && condition.Status == v1.ConditionFalse {
-			err := MakeRolloutError(FailureNotProgressing, "Deployment %q is not progressing: %v", deployment.Name, condition.Message)
-			return RolloutFatal(err)
-		}
-	}
-
 	replicasSetList, err := wrapper.ListAppsV1ReplicaSets(deployment)
 	if err != nil {
 		return RolloutFatal(err)
@@ -48,5 +41,14 @@ func DeploymentStatus(wrapper client.Kubernetes, deployment *appsv1.Deployment) 
 			return *fatal
 		}
 	}
+
+	for _, condition := range deployment.Status.Conditions {
+		if condition.Type == appsv1.DeploymentProgressing && condition.Status == v1.ConditionFalse {
+			err := MakeRolloutError(FailureNotProgressing, "Deployment %q is not progressing: %v", deployment.Name, condition.Message)
+			aggr.Add(RolloutFatal(err))
+			break
+		}
+	}
+
 	return aggr.Resolve()
 }

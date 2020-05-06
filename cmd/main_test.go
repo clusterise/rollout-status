@@ -82,6 +82,10 @@ func TestImagePullBackOff(t *testing.T) {
 	assertRolloutFailure(t, `Container "main" is in "ImagePullBackOff": Back-off pulling image "bogus-image:does-not-exist"`)
 }
 
+func TestImagePullBackOffOld(t *testing.T) {
+	assertRolloutFailure(t, `Container "main" is in "ImagePullBackOff": Back-off pulling image "bogus-image:does-not-exist"`)
+}
+
 func TestConfigError(t *testing.T) {
 	assertRolloutFailure(t, `Container "main" is in "CreateContainerConfigError": configmap "missing-config" not found`)
 }
